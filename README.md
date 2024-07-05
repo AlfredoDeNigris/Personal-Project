@@ -46,58 +46,57 @@ Response:
 
 1. GET api/v2/housing-options - get all housing options
 
-Server should answer with status code 200 and all housing options records.
+    Server should answer with status code 200 and all housing options records.
 
 
 2. GET api/v2/housing-options/{optionId} - get one housing option by ID
 
-Server should answer with status code 200 and record with id === optionId if it exists.
-
-Server should answer with status code 400 and corresponding message if optionId is invalid.
-
-Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+    Server should answer with status code 200 and record with id === optionId if it exists.
+    
+    Server should answer with status code 400 and corresponding message if optionId is invalid.
+    
+    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
 3. POST api/v2/housing-options - create a new housing option.
 
-The request body should contain the required information for creating a new housing option, such as name, labor costs, 
-material prices, and construction time.
-
-Server should answer with status code 201 and newly created record.
-
-Server should answer with status code 400 and corresponding message if request body does not contain required fields.
+    The request body should contain the required information for creating a new housing option, such as name, labor costs, 
+    material prices, and construction time.
+    
+    Server should answer with status code 201 and newly created record.
+    
+    Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
 
 4. PUT api/v2/housing-options/{optionId} - update existing housing option.
 
-The request body should contain the updated information for the housing option.
-
-Server should answer with status code 200 and update the record.
-
-Server should answer with status code 400 and corresponding message if optionId is invalid.
-
-Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+    The request body should contain the updated information for the housing option.
+    
+    Server should answer with status code 200 and update the record.
+    
+    Server should answer with status code 400 and corresponding message if optionId is invalid.
+    
+    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
 5. DELETE api/v2/housing-options/{optionId} - delete existing housing option from database
 
-Server should answer with status code 204 if the record was found and delete the record.
-
-Server should answer with status code 400 and corresponding message if optionId is invalid.
-
-Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+    Server should answer with status code 204 if the record was found and delete the record.
+    
+    Server should answer with status code 400 and corresponding message if optionId is invalid.
+    
+    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
 ### Endpoint api/v2/budget:
 
-
 6. POST api/v2/budget - provide a budget and get a list of all housing options that can be built within that budget.
 
-The request body should contain the budget amount.
-
-Server should answer with status code 200 and a list of housing options within the budget.
-
-Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
+    The request body should contain the budget amount.
+    
+    Server should answer with status code 200 and a list of housing options within the budget.
+    
+    Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
 
 ## Install
 
