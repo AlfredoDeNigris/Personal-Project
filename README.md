@@ -21,7 +21,7 @@ http://localhost:3000
 
 ## API Documentation
 
-1. Endpoint api/v2/login:
+### Endpoint api/v2/login:
 
 
 Endpoint: api/v2/login
@@ -41,15 +41,15 @@ Response:
 
 "token"
 
-2. Endpoint api/v2/housing-options:
+### Endpoint api/v2/housing-options:
 
 
-### GET api/v2/housing-options - get all housing options
+1. GET api/v2/housing-options - get all housing options
 
 Server should answer with status code 200 and all housing options records.
 
 
-### GET api/v2/housing-options/{optionId} - get one housing option by ID
+2. GET api/v2/housing-options/{optionId} - get one housing option by ID
 
 Server should answer with status code 200 and record with id === optionId if it exists.
 
@@ -58,7 +58,7 @@ Server should answer with status code 400 and corresponding message if optionId 
 Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
-### POST api/v2/housing-options - create a new housing option.
+3. POST api/v2/housing-options - create a new housing option.
 
 The request body should contain the required information for creating a new housing option, such as name, labor costs, 
 material prices, and construction time.
@@ -68,7 +68,7 @@ Server should answer with status code 201 and newly created record.
 Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
 
-### PUT api/v2/housing-options/{optionId} - update existing housing option.
+4. PUT api/v2/housing-options/{optionId} - update existing housing option.
 
 The request body should contain the updated information for the housing option.
 
@@ -79,7 +79,7 @@ Server should answer with status code 400 and corresponding message if optionId 
 Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
-### DELETE api/v2/housing-options/{optionId} - delete existing housing option from database
+5. DELETE api/v2/housing-options/{optionId} - delete existing housing option from database
 
 Server should answer with status code 204 if the record was found and delete the record.
 
@@ -88,10 +88,10 @@ Server should answer with status code 400 and corresponding message if optionId 
 Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
-3. Endpoint api/v2/budget:
+### Endpoint api/v2/budget:
 
 
-### POST api/v2/budget - provide a budget and get a list of all housing options that can be built within that budget.
+6. POST api/v2/budget - provide a budget and get a list of all housing options that can be built within that budget.
 
 The request body should contain the budget amount.
 
