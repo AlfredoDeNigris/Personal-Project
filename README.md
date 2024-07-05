@@ -8,8 +8,11 @@ This tool considers factors such as labor costs, material prices, and constructi
 ## Technical requirements
 
 Programming language - JavaScript (Node.js)
+
 Node.js - 18.16.0
+
 Database - MySQL
+
 Docker
 
 ### Base URL
