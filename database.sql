@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS HOUSE(
 CREATE TABLE IF NOT EXISTS MATERIAL(
     material_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
-    cost_per_square_meter DECIMAL(10, 2) NOT NULL
+    cost_square_meter DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS HOUSE_MATERIAL(
     house_id INT NOT NULL,
     material_id INT NOT NULL,
-    quantity DECIMAL(10, 2) NOT NULL,
+    square_meter INT NOT NULL,
     PRIMARY KEY (house_id, material_id),
     FOREIGN KEY (house_id) REFERENCES HOUSE(house_id),
     FOREIGN KEY (material_id) REFERENCES MATERIAL(material_id)
@@ -53,6 +53,20 @@ CREATE TABLE IF NOT EXISTS HOUSE_WORKER(
     PRIMARY KEY (house_id, worker_id),
     FOREIGN KEY (house_id) REFERENCES HOUSE(house_id),
     FOREIGN KEY (worker_id) REFERENCES WORKER(worker_id)
+);
+
+CREATE TABLE IF NOT EXISTS FEATURE(
+    feature_id INT AUTO_INCREMENT PRIMARY KEY,
+    cost INT NOT NULL,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS HOUSE_FEATURE(
+    house_id INT NOT NULL,
+    feature_id INT NOT NULL,
+    PRIMARY KEY (house_id, feature_id),
+    FOREIGN KEY (house_id) REFERENCES HOUSE(house_id),
+    FOREIGN KEY (feature_id) REFERENCES FEATURE(feature_id)
 );
 
 CREATE TABLE IF NOT EXISTS BUDGET_HOUSE(
