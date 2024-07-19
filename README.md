@@ -1,18 +1,18 @@
-# Budget Planner
-
 ## Description
 
-This is a budget planning tool for a construction company. When a client provides a budget, the system lists all housing options that can be built within that budget.
-This tool considers factors such as labor costs, material prices, and construction time.
+This is a budget planning tool
+for a construction company. When a client
+provides a budget, the system lists all
+housing options that can be built within
+that budget. The tool considers factors
+such as labor costs, material prices, and
+construction time.
 
 ## Technical requirements
 
 Programming language - JavaScript (Node.js)
-
 Node.js - 18.16.0
-
 Database - MySQL
-
 Docker
 
 ### Base URL
@@ -21,7 +21,7 @@ http://localhost:3000
 
 ## API Documentation
 
-### Endpoint api/v2/login:
+1. Endpoint api/v2/login:
 
 
 Endpoint: api/v2/login
@@ -29,80 +29,81 @@ Standard: JWT
 
 Request :
 
-curl -X 'POST' \
-‘/login’ \
+curl -X POST http://localhost:3000/api/v2/login \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "username": "username",
+    "password": "password"
+}'
 
-{
-"username": "username",
-"password": "password"
-}
 
 Response:
 
-"token"
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzIxMzQ0NTg3LCJleHAiOjE3MjEzNDQ2NDd9.y4DPa0BcKABeyCzZxJ4OPZzR_aUN_Vo1wmpuvfMiVLw"
 
-### Endpoint api/v2/housing-options:
-
-
-1. GET api/v2/housing-options - get all housing options
-
-    Server should answer with status code 200 and all housing options records.
+2. Endpoint api/v2/housing-options:
 
 
-2. GET api/v2/housing-options/{optionId} - get one housing option by ID
+### GET api/v2/housing-options - get all housing options
 
-    Server should answer with status code 200 and record with id === optionId if it exists.
-    
-    Server should answer with status code 400 and corresponding message if optionId is invalid.
-    
-    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+Server should answer with status code 200 and all housing options records.
 
 
-3. POST api/v2/housing-options - create a new housing option.
+### GET api/v2/housing-options/{optionId} - get one housing option by ID
 
-    The request body should contain the required information for creating a new housing option, such as name, labor costs, 
-    material prices, and construction time.
-    
-    Server should answer with status code 201 and newly created record.
-    
-    Server should answer with status code 400 and corresponding message if request body does not contain required fields.
+Server should answer with status code 200 and record with id === optionId if it exists.
 
+Server should answer with status code 400 and corresponding message if optionId is invalid.
 
-4. PUT api/v2/housing-options/{optionId} - update existing housing option.
-
-    The request body should contain the updated information for the housing option.
-    
-    Server should answer with status code 200 and update the record.
-    
-    Server should answer with status code 400 and corresponding message if optionId is invalid.
-    
-    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
 
 
-5. DELETE api/v2/housing-options/{optionId} - delete existing housing option from database
+### POST api/v2/housing-options - create a new housing option.
 
-    Server should answer with status code 204 if the record was found and delete the record.
-    
-    Server should answer with status code 400 and corresponding message if optionId is invalid.
-    
-    Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+The request body should contain the required information for creating a new housing option, such as name, labor costs, 
+material prices, and construction time.
+
+Server should answer with status code 201 and newly created record.
+
+Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
 
-### Endpoint api/v2/budget:
+### PUT api/v2/housing-options/{optionId} - update existing housing option.
 
-6. POST api/v2/budget - provide a budget and get a list of all housing options that can be built within that budget.
+The request body should contain the updated information for the housing option.
 
-    The request body should contain the budget amount.
-    
-    Server should answer with status code 200 and a list of housing options within the budget.
-    
-    Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
+Server should answer with status code 200 and update the record.
+
+Server should answer with status code 400 and corresponding message if optionId is invalid.
+
+Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+
+
+### DELETE api/v2/housing-options/{optionId} - delete existing housing option from database
+
+Server should answer with status code 204 if the record was found and delete the record.
+
+Server should answer with status code 400 and corresponding message if optionId is invalid.
+
+Server should answer with status code 404 and corresponding message if record with id === optionId doesn't exist.
+
+
+3. Endpoint api/v2/budget:
+
+
+### POST api/v2/budget - provide a budget and get a list of all housing options that can be built within that budget.
+
+The request body should contain the budget amount.
+
+Server should answer with status code 200 and a list of housing options within the budget.
+
+Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
 
 ## Install
 
 ### Node.js:
 
-To install Node.js version 18.16.0, follow these steps:
+To install Node.js version 18.16.0:
 
 1. Using Node Version Manager (nvm):
 
@@ -142,7 +143,7 @@ Download the installer from Node.js official website and follow the instructions
 
 ### Docker
 
-To install Docker, follow these steps:
+To install Docker:
 
 On Ubuntu/Debian:
 
