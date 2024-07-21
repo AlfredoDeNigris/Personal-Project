@@ -8,6 +8,8 @@
 
 - [Installation](#Installation)
 
+- [Run](#Run)
+
 # Description
 
 This is a budget planning tool for construction companies.
@@ -38,7 +40,7 @@ Standard: JWT
 
 Request :
 
-curl -X POST http://localhost:3000/api/v2/login \
+curl -X POST http://localhost:8080/api/v2/login \
   -H 'Content-Type: application/json' \
   -d '{
     "username": "username",
@@ -191,6 +193,8 @@ cd budgetPlanner
 ## Install dependencies:
 
 npm install
+
+# Run
 
 ## Run in docker container
 
