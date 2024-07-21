@@ -1,21 +1,23 @@
-## Description
+[Link to Section 1](#Description)
+
+# Description
 
 This is a budget planning tool for construction companies.
 When a client provides a budget, the system lists all housing options that can be built within that budget,
 as well as any additional features the client might want to add.
 
-## Technical requirements
+# Technical requirements
 
 Programming language - JavaScript (Node.js)
 Node.js - 18.16.0
 Database - MySQL
 Docker
 
-### Base URL
+## Base URL
 
 http://localhost:8080
 
-## API Documentation
+# API Documentation
 
 1. Endpoint api/v2/login:
 
