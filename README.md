@@ -2,9 +2,9 @@
 
 - [Description](#Description)
 
-- [Technical Requirements](#TechnicalRequirements)
+- [Technical Requirements](#Technical_Requirements)
 
-- [API Documentation](#APIDocumentation)
+- [API Documentation](#API_Documentation)
 
 - [Install](#Install)
 
