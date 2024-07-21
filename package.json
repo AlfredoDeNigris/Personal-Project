@@ -18,6 +18,10 @@
   "homepage": "https://github.com/AlfredoDeNigris/Personal-Project#readme",
   "dependencies": {
     "base64url": "^3.0.1",
-    "crypto": "^1.0.1"
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "mysql": "^2.18.1"
   }
 }

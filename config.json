@@ -1,0 +1,11 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "personal_project"
+    },
+    "server": {
+        "port": 8080
+    }
+}
