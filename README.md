@@ -1,4 +1,7 @@
-[Link to Section 1](#Description)
+[Description](#Description)
+[Technical Requirements](#TechnicalRequirements)
+[API Documentation](#APIDocumentation)
+[Install](#Install)
 
 # Description
 
@@ -6,7 +9,7 @@ This is a budget planning tool for construction companies.
 When a client provides a budget, the system lists all housing options that can be built within that budget,
 as well as any additional features the client might want to add.
 
-# Technical requirements
+# Technical Requirements
 
 Programming language - JavaScript (Node.js)
 Node.js - 18.16.0
@@ -97,9 +100,9 @@ Server should answer with status code 200 and a list of housing options within t
 
 Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
 
-## Install
+# Install
 
-### Node.js:
+## Node.js:
 
 To install Node.js version 18.16.0:
 
@@ -139,7 +142,7 @@ On Windows:
 
 Download the installer from Node.js official website and follow the instructions.
 
-### Docker
+## Docker
 
 To install Docker:
 
@@ -169,26 +172,26 @@ On Windows:
 
 Download and install Docker Desktop from Docker's official website.
 
-### Clone this repo with the command:
+## Clone this repo with the command:
 
 git clone <https://github.com/AlfredoDeNigris/Personal-Project>
 
-### Go to the project folder:
+## Go to the project folder:
 
 cd budgetPlanner
 
-### Install dependencies:
+## Install dependencies:
 
 npm install
 
-### Run in docker container
+## Run in docker container
 
 For running the application in a Docker container, you should have Docker installed on your system.
 
-### Run the app:
+## Run the app:
 
 docker compose up
 
-### Stop the app:
+## Stop the app:
 
 docker compose down
