@@ -13,7 +13,7 @@ Docker
 
 ### Base URL
 
-http://localhost:3000
+http://localhost:8080
 
 ## API Documentation
 
