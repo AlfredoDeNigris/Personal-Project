@@ -6,7 +6,7 @@
 
 - [API Documentation](#api-documentation)
 
-- [Install](#Install)
+- [Installation](#Installation)
 
 # Description
 
@@ -105,7 +105,7 @@ Server should answer with status code 200 and a list of housing options within t
 
 Server should answer with status code 400 and corresponding message if the budget amount is not provided or invalid.
 
-# Install
+# Installation
 
 ## Node.js:
 
