@@ -1,6 +1,6 @@
 ## Description
 
-This is a budget planning tool for a construction company.
+This is a budget planning tool for construction companies.
 When a client provides a budget, the system lists all housing options that can be built within that budget,
 as well as any additional features the client might want to add.
 
