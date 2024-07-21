@@ -1,7 +1,12 @@
-[Description](#Description)
-[Technical Requirements](#TechnicalRequirements)
-[API Documentation](#APIDocumentation)
-[Install](#Install)
+# Table of Contents
+
+- [Description](#Description)
+
+- [Technical Requirements](#TechnicalRequirements)
+
+- [API Documentation](#APIDocumentation)
+
+- [Install](#Install)
 
 # Description
 
