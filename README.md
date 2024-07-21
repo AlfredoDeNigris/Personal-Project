@@ -17,8 +17,11 @@ as well as any additional features the client might want to add.
 # Technical Requirements
 
 Programming language - JavaScript (Node.js)
+
 Node.js - 18.16.0
+
 Database - MySQL
+
 Docker
 
 ## Base URL
