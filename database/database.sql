@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS house_model(
 CREATE TABLE IF NOT EXISTS house_picture(
   house_pitcure_id INT PRIMARY KEY AUTO_INCREMENT,
   house_model_id INT NOT NULL,
-  picture LONGBLOB NOT NULL,
+  path_picture VARCHAR (255) NOT NULL,
   FOREIGN KEY (house_model_id) REFERENCES house_model (house_model_id)
 );
 
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS feature(
 CREATE TABLE IF NOT EXISTS feature_picture(
   feature_pitcure_id INT PRIMARY KEY AUTO_INCREMENT,
   feature_id INT NOT NULL,
-  picture LONGBLOB NOT NULL,
+  path_picture VARCHAR (255) NOT NULL,
   FOREIGN KEY (feature_id) REFERENCES feature (feature_id)
 );
 

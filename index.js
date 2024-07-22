@@ -11,7 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 const config = require('./config.json');
 
 //Read SQL script
-const sqlScript = fs.readFileSync('./database/database.sql', 'utf8');
+const sqlSetUp = fs.readFileSync('./database/database.sql', 'utf8');
+
 
 //Create a connection to the database
 const connection = mysql.createConnection({
@@ -21,6 +22,7 @@ const connection = mysql.createConnection({
     multipleStatements: true //This allows multiple statements in a single query
 });
 
+
 //Connect to the database and execute the SQL script
 connection.connect(err => {
     if (err) {
@@ -29,7 +31,7 @@ connection.connect(err => {
     }
     console.log('Connected to the database.');
 
-    connection.query(sqlScript, (err, results) => {
+    connection.query(sqlSetUp, (err, results) => {
         if (err) {
             console.error('Error executing the SQL script:', err.message);
         } else {
