@@ -37,8 +37,8 @@ http://localhost:8080
 Endpoint: api/login
 Standard: JWT
 
-curl -X POST http://localhost:8080/api/login 
-  -H 'Content-Type: application/json' \
+curl -X POST http://localhost:8080/api/login  
+  -H 'Content-Type: application/json'  
   -d '{  
     "username": "ignacioDeNigris",  
     "password": "password"  
@@ -54,8 +54,8 @@ Response:
 
 ### POST api/client/register - create new client
 
-curl -X POST http://localhost:8080/api/client/register \
-  -H 'Content-Type: application/json' \
+curl -X POST http://localhost:8080/api/client/register  
+  -H 'Content-Type: application/json'  
   -d '{
     "full_name": "Ignacio De Nigris",  
     "username": "ignacioDeNigris",  
@@ -77,7 +77,7 @@ Server should answer with status code 400 and corresponding message if request b
 
 ### GET api/client/profile/:client_id - get client's information
 
-curl -X GET http://localhost:8080/api/client/profile/{client_id} \
+curl -X GET http://localhost:8080/api/client/profile/{client_id}  
   -H 'Accept: application/json'
 
 
@@ -90,8 +90,8 @@ Server should answer with status code 404 and corresponding message if record wi
 
 ### PUT api/client/profile/:client_id - updates client's information
 
-curl -X PUT http://localhost:8080/api/client/profile/{client_id} \
-  -H 'Content-Type: application/json' \
+curl -X PUT http://localhost:8080/api/client/profile/{client_id}  
+  -H 'Content-Type: application/json'  
   -d '{  
     "full_name": "Alfredo De Nigris",  
     "username": "alfredoDeNigris",  
@@ -127,15 +127,15 @@ Server should answer with status code 404 and corresponding message if record wi
 
 ### GET api/house-catalogue - get all housing options
 
-curl -X GET http://localhost:8080/api/house-catalogue \
-  -H 'Accept: application/json' \
+curl -X GET http://localhost:8080/api/house-catalogue  
+  -H 'Accept: application/json'  
 
 
 Server should answer with status code 200 and all housing options records.
 
 ### GET api/house-catalogue/:budget - get all housing options with a comercial_cost less or equal to the inputed amount
 
-curl -X GET http://localhost:8080/api/house-catalogue/{amount} \
+curl -X GET http://localhost:8080/api/house-catalogue/{amount}  
   -H 'Accept: application/json'
 
 
@@ -144,7 +144,7 @@ Server should answer with status code 200 and all housing options with a comerci
 
 ### GET api/house-catalogue/:house_model_id - Obtein information about the house selected by the client.
 
-curl -X GET http://localhost:8080/api/house-catalogue/{house_model_id} \
+curl -X GET http://localhost:8080/api/house-catalogue/{house_model_id}  
   -H 'Accept: application/json'
 
 
@@ -159,16 +159,16 @@ Server should answer with status code 404 and corresponding message if record wi
 
 ### GET api/features - get all features
 
-curl -X GET http://localhost:8080/api/features \
-  -H 'Accept: application/json' \
+curl -X GET http://localhost:8080/api/features  
+  -H 'Accept: application/json'  
 
 
 Server should answer with status code 200 and all features records.
 
 ### GET api/features/:difference - get all features with a unit_cost less or equal to the difference between the client's budget and the selected house's comercial_cost
 
-curl -X GET http://localhost:8080/api/features/{difference} \
-  -H 'Accept: application/json' \
+curl -X GET http://localhost:8080/api/features/{difference}  
+  -H 'Accept: application/json'  
 
 
 Server should answer with status code 200 and all features with a unit_cost less or equal to the difference between the client's budget and the selected house's comercial_cost.
@@ -177,8 +177,8 @@ Server should answer with status code 200 and all features with a unit_cost less
 
 ### POST api/selected_house - create a new selected_house
 
-curl -X POST http://localhost:8080/api/selected_house \
-  -H 'Content-Type: application/json' \
+curl -X POST http://localhost:8080/api/selected_house  
+  -H 'Content-Type: application/json'  
   -d '{  
     "client_id": 1,  
     "house_id": 2,  
@@ -194,8 +194,8 @@ Server should answer with status code 400 and corresponding message if request b
 
 ### PUT api/selected_house/:client_id/:house_model_id - updates selected_house information
 
-curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id} \
-  -H 'Content-Type: application/json' \
+curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}  
+  -H 'Content-Type: application/json'  
   -d '{  
     "client_id": 5,  
     "house_model_id": 9,  
@@ -226,8 +226,8 @@ Server should answer with status code 404 and corresponding message if either re
 
 ### POST api/selected_house_feature/:feature_id - create a new selected_house_feature
 
-curl -X POST http://localhost:8080/api/selected_house_feature/{feature_id} \
-  -H 'Content-Type: application/json' \
+curl -X POST http://localhost:8080/api/selected_house_feature/{feature_id}  
+  -H 'Content-Type: application/json'  
   -d '{  
     "client_id": 1,  
     "house_model_id": 2,  
@@ -244,8 +244,8 @@ Server should answer with status code 400 and corresponding message if request b
 
 ### PUT api/selected_house/:client_id/:house_model_id/:feature_id - updates selected_house_feature information
 
-curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}/{feature_id} \
-  -H 'Content-Type: application/json' \
+curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}/{feature_id}  
+  -H 'Content-Type: application/json'  
   -d '{  
     "client_id": 1,  
     "house_model_id": 2,  
