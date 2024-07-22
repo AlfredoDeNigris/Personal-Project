@@ -10,20 +10,20 @@ app.use(express.urlencoded({ extended: true }));
 
 const config = require('./config.json');
 
-//Read SQL script
-const sqlSetUp = fs.readFileSync('./database/database.sql', 'utf8');
-
+//Read SQL scripts
+const sqlSetup = fs.readFileSync('./database/database.sql', 'utf8');
+const defaultOptions = fs.readFileSync('./database/defaultOptions.sql', 'utf8');
 
 //Create a connection to the database
 const connection = mysql.createConnection({
     host: config.database.host,
     user: config.database.user,
     password: config.database.password,
-    multipleStatements: true //This allows multiple statements in a single query
+    database: config.database.name,
+    multipleStatements: true // This allows multiple statements in a single query
 });
 
-
-//Connect to the database and execute the SQL script
+//Connect to the database and execute the SQL scripts
 connection.connect(err => {
     if (err) {
         console.error('Error connecting to the database:', err.message);
@@ -31,11 +31,21 @@ connection.connect(err => {
     }
     console.log('Connected to the database.');
 
-    connection.query(sqlSetUp, (err, results) => {
+    //Execute setup script
+    connection.query(sqlSetup, (err, results) => {
         if (err) {
-            console.error('Error executing the SQL script:', err.message);
+            console.error('Error executing the setup SQL script:', err.message);
         } else {
-            console.log('SQL script executed successfully.');
+            console.log('Setup SQL script executed successfully.');
+
+            //Execute default options script
+            connection.query(defaultOptions, (err, results) => {
+                if (err) {
+                    console.error('Error executing the default options SQL script:', err.message);
+                } else {
+                    console.log('Default options SQL script executed successfully.');
+                }
+            });
         }
     });
 });
@@ -46,14 +56,13 @@ app.use((req, res, next) => {
     next();
 });
 
-
 //Start the Express server
 app.listen(config.server.port, (err) => {
     if (err) {
         console.log(err.code);
         console.log(err.fatal);
     } else {
-        console.log(`Connected to port ${config.server.port}.`);
+        console.log(`Server is running on port ${config.server.port}.`);
     }
 });
 
@@ -70,6 +79,6 @@ const shutdownConnection = () => {
     });
 };
 
-// Handle termination signals
+//Handle termination signals
 process.on('SIGTERM', shutdownConnection);
 process.on('SIGINT', shutdownConnection);
