@@ -37,11 +37,11 @@ http://localhost:8080
 Endpoint: api/login
 Standard: JWT
 
-curl -X POST http://localhost:8080/api/login \
+curl -X POST http://localhost:8080/api/login 
   -H 'Content-Type: application/json' \
-  -d '{
+  -d '{  
     "username": "ignacioDeNigris",  
-    "password": "password"
+    "password": "password"  
 }'
 
 
@@ -57,12 +57,12 @@ Response:
 curl -X POST http://localhost:8080/api/client/register \
   -H 'Content-Type: application/json' \
   -d '{
-    "full_name": "Ignacio De Nigris",
-    "username": "ignacioDeNigris",
-    "password": "securePassword123",
-    "billing_address": "123 Main St, Anytown, USA",
-    "phone_number": "123-456-7890",
-    "email": "ignaciodenigris@gmail.com"
+    "full_name": "Ignacio De Nigris",  
+    "username": "ignacioDeNigris",  
+    "password": "securePassword123",  
+    "billing_address": "123 Main St, Anytown, USA",  
+    "phone_number": "123-456-7890",  
+    "email": "ignaciodenigris@gmail.com"  
 }'
 
 
@@ -92,13 +92,13 @@ Server should answer with status code 404 and corresponding message if record wi
 
 curl -X PUT http://localhost:8080/api/client/profile/{client_id} \
   -H 'Content-Type: application/json' \
-  -d '{
-    "full_name": "Alfredo De Nigris",
-    "username": "alfredoDeNigris",
-    "password": "newSecurePassword123",
-    "billing_address": "456 Main St, Anytown, USA",
-    "phone_number": "987-654-3210",
-    "email": "alfredodenigris@gmail.com"
+  -d '{  
+    "full_name": "Alfredo De Nigris",  
+    "username": "alfredoDeNigris",  
+    "password": "newSecurePassword123",  
+    "billing_address": "456 Main St, Anytown, USA",  
+    "phone_number": "987-654-3210",  
+    "email": "alfredodenigris@gmail.com"  
 }'
 
 
@@ -179,10 +179,10 @@ Server should answer with status code 200 and all features with a unit_cost less
 
 curl -X POST http://localhost:8080/api/selected_house \
   -H 'Content-Type: application/json' \
-  -d '{
-    "client_id": 1,
-    "house_id": 2,
-    "final_price": 150000
+  -d '{  
+    "client_id": 1,  
+    "house_id": 2,  
+    "final_price": 150000  
 }'
 
 
@@ -196,10 +196,10 @@ Server should answer with status code 400 and corresponding message if request b
 
 curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id} \
   -H 'Content-Type: application/json' \
-  -d '{
-    "client_id": 5,
-    "house_model_id": 9,
-    "final_price": 155000
+  -d '{  
+    "client_id": 5,  
+    "house_model_id": 9,  
+    "final_price": 155000  
 }'
 
 
@@ -228,11 +228,11 @@ Server should answer with status code 404 and corresponding message if either re
 
 curl -X POST http://localhost:8080/api/selected_house_feature/{feature_id} \
   -H 'Content-Type: application/json' \
-  -d '{
-    "client_id": 1,
-    "house_model_id": 2,
-    "feature_id": 3,
-    "quantity": 2
+  -d '{  
+    "client_id": 1,  
+    "house_model_id": 2,  
+    "feature_id": 3,  
+    "quantity": 2  
 }'
 
 
@@ -246,11 +246,11 @@ Server should answer with status code 400 and corresponding message if request b
 
 curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}/{feature_id} \
   -H 'Content-Type: application/json' \
-  -d '{
-    "client_id": 1,
-    "house_model_id": 2,
-    "feature_id": 3,
-    "quantity": 4
+  -d '{  
+    "client_id": 1,  
+    "house_model_id": 2,  
+    "feature_id": 3,  
+    "quantity": 4  
 }'
 
 
