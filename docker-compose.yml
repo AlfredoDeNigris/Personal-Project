@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      MYSQL_HOST: localhost
+      MYSQL_HOST: db
       MYSQL_USER: root
       MYSQL_PASSWORD: ""
       MYSQL_DATABASE: personal_project
