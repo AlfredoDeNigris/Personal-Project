@@ -64,10 +64,6 @@ tsbuildinfo
 .env
 .env.test
 
-# Docker files
-docker-compose.override.yml
-.dockerignore
-
 # MySQL data and config
 db-data/
 
