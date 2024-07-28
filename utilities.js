@@ -1,13 +1,13 @@
-function validate(params, expectedTypes) { //Ya qyue puedo definir "entity" en cada archivo individual, podria poner a "validate" ú otra función nueva a lidiar con el seteo de "id"
+function validate(params, expectedTypes) {
     for (let i = 0; i < params.length; i++) {
         const expectedType = expectedTypes[i];
         const actualType = typeof params[i];
         const errorObject = {
-            message: `El tipo de dato ingresado en la posición ${i + 1} es incorrecto. Se esperaba: ${expectedType} pero se recibió: ${actualType}`,
+            message: `The data type entered at position ${i + 1} is incorrect. Expected: ${expectedType} but received: ${actualType}`,
             code: "INVALID_DATA_TYPE"
         };
-        // agregar un expectedType === 'array';
-        if (expectedType === 'number') {
+
+        if (expectedType === 'number') { //phone_number, final_price, client_id, house_model_id, feature_id, unit_cost, quantity.
             const inputStr = params[i].toString();
             for (let j = 0; j < inputStr.length; j++) {
                 if (isNaN(inputStr[j])) {
@@ -16,68 +16,60 @@ function validate(params, expectedTypes) { //Ya qyue puedo definir "entity" en c
             }
             params[i] = parseInt(params[i]);
 
-        } else if (expectedType === 'string') { //
+        } else if (expectedType === 'string') { //full_name.
             const allowedCharacters = /^[a-zA-ZáÁéÉíÍóÓúÚüÜñÑçÇ\s]+$/;
             if (!allowedCharacters.test(params[i])) {
                 throw errorObject;
             }
+
         } else if (expectedType === 'password') { //password.
-            const allowedCharacters = /^[a-zA-Z0-9áÁéÉíÍóÓúÚüÜñÑçÇ\s\d!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+/;
-            if (!allowedCharacters.test(params[i])) {
+            if (actualType !== 'string') {
                 throw errorObject;
             }
-        } else if (expectedType === 'text') { //
-            if ((actualType === 'string') && (params[i] === '')) {
-                (expectedType = actualType)
-            } else {
-                const allowedCharacters = /^[\x20-\x7EáÁéÉíÍóÓúÚüÜñÑçÇ,.;:\-_{}[\]¿?¡#!<>"'| /&%$@`]+$/;
-                if (!allowedCharacters.test(params[i])) {
-                    throw errorObject;
-                }
+
+        } else if (expectedType === 'text') { //username, billing_address, review, information
+            if (actualType !== 'string' || params[i] === '') {
+                throw errorObject;
             }
-        } else if (expectedType === 'email') {
+
+        } else if (expectedType === 'email') { // email
             const allowedCharacters = /^[A-Za-z0-9._%-ñÑҫÇç]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
             if (!allowedCharacters.test(params[i])) {
                 throw errorObject;
             }
-        } else if (expectedType === 'object') {
-            const date = new Date(params[i]);
-            if (!isNaN(date.getTime())) {
-                params[i] = date.toISOString(); //Convierto a Coordinated Universal Time (UTC).
-            } else {
-                throw errorObject;
-            }
+
         } else if (expectedType !== actualType) {
             throw errorObject;
         }
     }
 };
 
-function errorGlobal(callback, err, result, entity, id) {
+
+function globalError(callback, err, result, entity, id) {
     console.log("Error:", err);
     if (err) {
         if (err.code === "ER_DUP_ENTRY" && err.sqlMessage.includes('unique_persona')) {
             callback({
                 status: 409,
-                message: "La persona seleccionada ya dispone de un usuario",
+                message: "The selected person already has a user",
                 detail: err
             });
         } else if (err.code === "ER_DUP_ENTRY") {
             callback({
                 status: 409,
-                message: `Ya hay una ${entity} registrad@ con ese ${id}`,
+                message: `There is already a registered ${entity} with that ${id}`,
                 detail: err
             });
         } else if (err.code === "ER_NO_REFERENCED_ROW_2") {
             callback({
                 status: 422,
-                message: "El dni ingresado no corresponde a ninguna persona en la base de datos",
+                message: "The entered dni does not correspond to any person in the database",
                 detail: err
             });
         } else if (err.code === "ER_ROW_IS_REFERENCED_2") {
             callback({
                 status: 409,
-                message: `No se puede eliminar est@ ${entity}, debido a uno o más conflictos de referencia.`,
+                message: `This ${entity} cannot be deleted due to one or more reference conflicts.`,
                 detail: err
             });
         } else if (err.code === "INVALID_DATA_TYPE") {
@@ -89,43 +81,43 @@ function errorGlobal(callback, err, result, entity, id) {
         } else if (err.code === "ER_BAD_FIELD_ERROR") {
             callback({
                 status: 400,
-                message: "El tipo de dato ingresado no es correcto",
+                message: "The entered data type is not correct",
                 detail: err
             });
         } else {
             callback({
                 status: 500,
-                message: "Error desconocido",
+                message: "Unknown error",
                 detail: err
             });
         }
     } else if ((result && result.affectedRows === 0) || (result && result.length === 0)) {
         callback({
             status: 404,
-            message: `No existé ${entity} registrad@ con el criterio de búsqueda ingresado`,
+            message: `No registered ${entity} found with the entered search criteria`,
             detail: err
         });
     } else {
         callback({
             status: 500,
-            message: "Comportamiento desconocido",
+            message: "Unknown behavior",
             detail: err
-        }); //Agregar mensaje de error con el código "ER_NO_SUCH_TABLE"
+        }); // Add error message with code "ER_NO_SUCH_TABLE"
     }
 };
 
-// Función que ejecuta una query y maneja el resultado
+
 function executeQuery(connection, query, params, successMessage, funCallback, entity, id) {
     connection.query(query, params, (err, result) => {
         if (err || result.affectedRows === 0 || result.length === 0) {
             connection.rollback(() => {
-                errorGlobal(funCallback, err, result, entity, id);
+                globalError(funCallback, err, result, entity, id);
             });
         } else {
             connection.commit((commitErr) => {
                 if (commitErr) {
                     connection.rollback(() => {
-                        errorGlobal(funCallback, err, result, entity, id);
+                        globalError(funCallback, err, result, entity, id);
                     });
                 } else {
                     funCallback(undefined, {
@@ -142,7 +134,7 @@ function executeQuery(connection, query, params, successMessage, funCallback, en
 function readQuery(connection, query, params, successMessage, funCallback, entity, id) {
     connection.query(query, params, (err, result) => {
         if (err || result.length === 0) {
-            funcionesAuxiliares.errorGlobal(funCallback, err, result, entity, id);
+            funcionesAuxiliares.globalError(funCallback, err, result, entity, id);
         } else {
             funCallback(undefined, {
                 message: successMessage,
@@ -155,6 +147,6 @@ function readQuery(connection, query, params, successMessage, funCallback, entit
 
 module.exports = {
     validate: validate,
-    errorGlobal: errorGlobal,
+    globalError: globalError,
     executeQuery: executeQuery
 };
