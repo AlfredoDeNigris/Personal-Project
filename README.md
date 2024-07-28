@@ -34,7 +34,7 @@ http://localhost:8080
 
 ## 1. Endpoint api/login:
 
-Endpoint: api/login
+Endpoint: api/login  
 Standard: JWT
 
 curl -X POST http://localhost:8080/api/login  
