@@ -142,7 +142,7 @@ curl -X GET http://localhost:8080/api/house-catalogue/{amount}
 Server should answer with status code 200 and all housing options with a comercial_cost less or equal to the inputed amount.
 
 
-### GET api/house-catalogue/:house_model_id - Obtein information about the house selected by the client.
+### GET api/house-catalogue/house/:house_model_id - Obtein information about the house selected by the client.
 
 curl -X GET http://localhost:8080/api/house-catalogue/{house_model_id}  
   -H 'Accept: application/json'
@@ -173,9 +173,29 @@ curl -X GET http://localhost:8080/api/features/{difference}
 
 Server should answer with status code 200 and all features with a unit_cost less or equal to the difference between the client's budget and the selected house's comercial_cost.
 
-## 6. Endpoint api/selected_house
+## 6. Endpoint api/selected-house
 
-### POST api/selected_house - create a new selected_house
+### GET api/selected-house - get all selected_house owned by any client 
+
+curl -X GET http://localhost:8080/api/selected_house  
+  -H 'Accept: application/json'  
+
+
+Server should answer with status code 200 and all housing options records.
+
+### GET api/selected-house/:client_id - Obtein information about all selected_house owned by a client.
+
+curl -X GET http://localhost:8080/api/selected-house/{client_id}  
+  -H 'Accept: application/json'
+
+
+Server should answer with status code 200 and record with id === client_id if it exists.
+
+Server should answer with status code 400 and corresponding message if client_id is invalid.
+
+Server should answer with status code 404 and corresponding message if record with id === client_id does not exist.
+
+### POST api/selected-house - create a new selected_house
 
 curl -X POST http://localhost:8080/api/selected_house  
   -H 'Content-Type: application/json'  
@@ -192,7 +212,7 @@ Server should answer with status code 201 and newly created record.
 
 Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
-### PUT api/selected_house/:client_id/:house_model_id - updates selected_house information
+### PUT api/selected-house/:client_id/:house_model_id - updates selected_house information
 
 curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}  
   -H 'Content-Type: application/json'  
@@ -211,7 +231,7 @@ Server should answer with status code 400 and corresponding message if either cl
 
 Server should answer with status code 404 and corresponding message if either record with id === client_id does not exist and/or record with id === house_model_id does not exist.
 
-### DELETE api/selected_house/:client_id/:house_model_id - deletes existing selected_house
+### DELETE api/selected-house/:client_id/:house_model_id - deletes existing selected_house
 
 curl -X DELETE http://localhost:8080/api/selected_house/{client_id}/{house_model_id}
 
