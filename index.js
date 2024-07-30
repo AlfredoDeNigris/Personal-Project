@@ -60,7 +60,7 @@ const retryConnection = (retries = 5) => {
             executeScript(sqlSetup, (err) => {
                 if (!err) {
                     executeScript(defaultOptions, () => {
-                        // Release the initial connection back to the pool
+                        //Release the initial connection back to the pool
                         connection.release();
                     });
                 } else {
@@ -73,7 +73,7 @@ const retryConnection = (retries = 5) => {
 
 retryConnection();
 
-// Middleware to make the pool available to routes
+//Middleware to make the pool available to routes
 app.use((req, res, next) => {
     console.log("Setting req.pool");
     req.pool = pool;

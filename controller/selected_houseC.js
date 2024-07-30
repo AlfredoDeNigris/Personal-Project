@@ -35,18 +35,6 @@ app.post('/', (req, res) => {
     });
 });
 
-app.put("/:client_id/:house_model_id", (req, res) => {//Consultar
-    const selected_house_id = req.params.selected_house_id;
-    const selected_house = req.body;
-    selected_houseDb.update(req.pool, selected_house_id, selected_house, (err, result) => {
-        if (err) {
-            res.status(err.status).send(err);
-        } else {
-            res.json(result);
-        }
-    });
-});
-
 app.delete("/:client_id/:house_model_id", (req, res) => {
     const client_id = req.params.client_id;
     const house_model_id = req.params.house_model_id;

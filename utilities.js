@@ -44,26 +44,21 @@ function validate(params, expectedTypes) {
     }
 };
 
-
-function globalError(callback, err, result, entity, id) {
-    console.log("Error:", err);
+function globalError(pool, callback, err, result, entity) {
+    console.log("Error:", err); //This line is here to help identify unknow errors, will be deleted after app is done.
+    if (!pool) {
+        callback({
+            status: 500,
+            message: 'Database pool pool is not available',
+            detail: err
+        });
+        return;
+    }
     if (err) {
         if (err.code === "ER_DUP_ENTRY" && err.sqlMessage.includes('unique_persona')) {
             callback({
                 status: 409,
                 message: "The selected person already has a user",
-                detail: err
-            });
-        } else if (err.code === "ER_DUP_ENTRY") {
-            callback({
-                status: 409,
-                message: `There is already a registered ${entity} with that ${id}`,
-                detail: err
-            });
-        } else if (err.code === "ER_NO_REFERENCED_ROW_2") {
-            callback({
-                status: 422,
-                message: "The entered dni does not correspond to any person in the database",
                 detail: err
             });
         } else if (err.code === "ER_ROW_IS_REFERENCED_2") {
@@ -94,59 +89,74 @@ function globalError(callback, err, result, entity, id) {
     } else if ((result && result.affectedRows === 0) || (result && result.length === 0)) {
         callback({
             status: 404,
-            message: `No registered ${entity} found with the entered search criteria`,
-            detail: err
+            message: `No registered ${entity} found with the entered search criteria`
         });
     } else {
         callback({
             status: 500,
             message: "Unknown behavior",
             detail: err
-        }); // Add error message with code "ER_NO_SUCH_TABLE"
+        });
     }
 };
 
+function executeQuery(pool, query, params, successMessage, callback, entity) {
+    pool.getConnection((err, connection) => {
+        if (err) {
+            return globalError(pool, callback, err, null, entity);
+        }
 
-function executeQuery(connection, query, params, successMessage, funCallback, entity, id) {
-    connection.query(query, params, (err, result) => {
-        if (err || result.affectedRows === 0 || result.length === 0) {
-            connection.rollback(() => {
-                globalError(funCallback, err, result, entity, id);
-            });
-        } else {
-            connection.commit((commitErr) => {
-                if (commitErr) {
-                    connection.rollback(() => {
-                        globalError(funCallback, err, result, entity, id);
+        connection.beginTransaction((transErr) => {
+            if (transErr) {
+                connection.release();
+                return globalError(pool, callback, transErr, null, entity);
+            }
+
+            connection.query(query, params, (queryErr, result) => {
+                if (queryErr || result.affectedRows === 0 || result.length === 0) {
+                    return connection.rollback(() => {
+                        connection.release();
+                        globalError(pool, callback, queryErr, result, entity);
                     });
-                } else {
-                    funCallback(undefined, {
+                }
+
+                connection.commit((commitErr) => {
+                    if (commitErr) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            globalError(pool, callback, commitErr, result, entity);
+                        });
+                    }
+
+                    connection.release();
+                    callback(undefined, {
                         message: successMessage,
                         detail: result
                     });
-                }
+                });
             });
-        }
+        });
     });
 }
 
-/* Función tentativa.
-function readQuery(connection, query, params, successMessage, funCallback, entity, id) {
-    connection.query(query, params, (err, result) => {
+
+
+function readQuery(pool, query, params, callback, entity) {
+    pool.query(query, params, (err, result) => {
         if (err || result.length === 0) {
-            funcionesAuxiliares.globalError(funCallback, err, result, entity, id);
+            globalError(pool, callback, err, result, entity);
         } else {
-            funCallback(undefined, {
-                message: successMessage,
-                detail: result
+            callback(undefined, {
+                result
             });
         }
     });
-}
-*/
+};
+
 
 module.exports = {
     validate: validate,
     globalError: globalError,
-    executeQuery: executeQuery
+    executeQuery: executeQuery,
+    readQuery: readQuery
 };

@@ -212,25 +212,6 @@ Server should answer with status code 201 and newly created record.
 
 Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
-### PUT api/selected-house/:client_id/:house_model_id - updates selected_house information
-
-curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}  
-  -H 'Content-Type: application/json'  
-  -d '{  
-    "client_id": 5,  
-    "house_model_id": 9,  
-    "final_price": 155000  
-}'
-
-
-The request body should contain the required information for editing the existin selected_house information, such as client_id, house_model_id, and final_price.
-
-Server should answer with status code 200 and record with id === client_id and record with id === house_model_id if they both exists.
-
-Server should answer with status code 400 and corresponding message if either client_id and/or house_model_id are invalid.
-
-Server should answer with status code 404 and corresponding message if either record with id === client_id does not exist and/or record with id === house_model_id does not exist.
-
 ### DELETE api/selected-house/:client_id/:house_model_id - deletes existing selected_house
 
 curl -X DELETE http://localhost:8080/api/selected_house/{client_id}/{house_model_id}
