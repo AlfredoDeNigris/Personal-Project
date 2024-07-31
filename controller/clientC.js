@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 
 const clientDb = require("../model/clientM.js");
+const security = require("./securityC.js");
 
-app.get("/", (req, res) => {
+app.get("/", security.verify, (req, res) => {
     clientDb.getC(req.pool, (err, result) => {
         if (err) {
             res.status(err.status).send(err);
@@ -13,7 +14,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.get("/profile/:client_id", (req, res) => {
+app.get("/profile/:client_id", security.verify, (req, res) => {
     const client_id = req.params.client_id;
     clientDb.getCP(req.pool, client_id, (err, result) => {
         if (err) {
@@ -35,7 +36,7 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.put("/profile/:client_id", (req, res) => {
+app.put("/profile/:client_id", security.verify, (req, res) => {
     const client_id = req.params.client_id;
     const client = req.body;
     clientDb.update(req.pool, client_id, client, (err, result) => {
@@ -47,7 +48,7 @@ app.put("/profile/:client_id", (req, res) => {
     });
 });
 
-app.delete("/profile/:client_id", (req, res) => {
+app.delete("/profile/:client_id", security.verify, (req, res) => {
     const client_id = req.params.client_id;
     clientDb.delete(req.pool, client_id, (err, result) => {
         if (err) {

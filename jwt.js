@@ -106,3 +106,11 @@ try {
         console.error(`[Error] ${error.message}`);
     }
 }
+
+module.exports = {
+    createJWT,
+    verifyJWT,
+    JWTError,
+    ExpiredTokenError,
+    InvalidTokenError
+};

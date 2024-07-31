@@ -13,14 +13,15 @@ const config = require('./config.json');
 const client = require("./controller/clientC.js");
 const feature = require("./controller/featureC.js");
 const house_catalogue = require("./controller/house_catalogueC.js");
+const { login } = require('./controller/securityC.js'); // Import the login function directly
 const selected_house = require("./controller/selected_houseC.js");
 const selected_house_feature = require("./controller/selected_house_featureC.js");
 
-//Read SQL scripts
+// Read SQL scripts
 const sqlSetup = fs.readFileSync('./database/database.sql', 'utf8');
 const defaultOptions = fs.readFileSync('./database/defaultOptions.sql', 'utf8');
 
-//Create a connection pool to the database
+// Create a connection pool to the database
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: process.env.MYSQL_HOST || 'db',
@@ -44,7 +45,7 @@ const executeScript = (script, callback) => {
     });
 };
 
-// Retry connection logic
+// Retry connection
 const retryConnection = (retries = 5) => {
     pool.getConnection((err, connection) => {
         if (err) {
@@ -60,8 +61,7 @@ const retryConnection = (retries = 5) => {
             executeScript(sqlSetup, (err) => {
                 if (!err) {
                     executeScript(defaultOptions, () => {
-                        //Release the initial connection back to the pool
-                        connection.release();
+                        connection.release(); // Release the initial connection back to the pool
                     });
                 } else {
                     connection.release();
@@ -73,14 +73,14 @@ const retryConnection = (retries = 5) => {
 
 retryConnection();
 
-//Middleware to make the pool available to routes
+// Middleware to make the pool available to routes
 app.use((req, res, next) => {
     console.log("Setting req.pool");
     req.pool = pool;
     next();
 });
 
-//Default route to check server's status
+// Default route to check server's status
 app.get('/api/isAlive', (req, res) => {
     res.sendStatus(200);
 });
@@ -88,10 +88,11 @@ app.get('/api/isAlive', (req, res) => {
 app.use('/api/client', client);
 app.use('/api/features', feature);
 app.use('/api/house-catalogue', house_catalogue);
+app.post('/api/login', login); // Directly handle login route
 app.use('/api/selected-house', selected_house);
 app.use('/api/selected-house-feature', selected_house_feature);
 
-//Start the Express server
+// Start the Express server
 app.listen(config.server.port, (err) => {
     if (err) {
         console.log(err.code);
@@ -101,7 +102,7 @@ app.listen(config.server.port, (err) => {
     }
 });
 
-//Handle server shutdown
+// Handle server shutdown
 const shutdownConnection = () => {
     console.log('Shutting down database connections');
     pool.end(err => {
@@ -114,6 +115,6 @@ const shutdownConnection = () => {
     });
 };
 
-//Handle termination signals
+// Handle termination signals
 process.on('SIGTERM', shutdownConnection);
 process.on('SIGINT', shutdownConnection);

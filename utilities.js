@@ -55,13 +55,7 @@ function globalError(pool, callback, err, result, entity) {
         return;
     }
     if (err) {
-        if (err.code === "ER_DUP_ENTRY" && err.sqlMessage.includes('unique_persona')) {
-            callback({
-                status: 409,
-                message: "The selected person already has a user",
-                detail: err
-            });
-        } else if (err.code === "ER_ROW_IS_REFERENCED_2") {
+        if (err.code === "ER_ROW_IS_REFERENCED_2") {
             callback({
                 status: 409,
                 message: `This ${entity} cannot be deleted due to one or more reference conflicts.`,
@@ -137,9 +131,7 @@ function executeQuery(pool, query, params, successMessage, callback, entity) {
             });
         });
     });
-}
-
-
+};
 
 function readQuery(pool, query, params, callback, entity) {
     pool.query(query, params, (err, result) => {
