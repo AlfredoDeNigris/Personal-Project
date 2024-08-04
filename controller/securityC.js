@@ -1,7 +1,8 @@
+require('rootpath')();
 const bcrypt = require('bcrypt');
-const { createJWT, verifyJWT, ExpiredTokenError, InvalidTokenError } = require("../jwt.js");
-const u = require("../utilities.js");
-const clientDb = require("../model/clientM.js");
+const { createJWT, verifyJWT, ExpiredTokenError, InvalidTokenError } = require("tokenGenerator.js");
+const u = require("utilities.js");
+const clientDb = require("model/clientM.js");
 const entity = "client";
 
 function login(req, res) {

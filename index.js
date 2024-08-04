@@ -13,7 +13,7 @@ const config = require('./config.json');
 const client = require("./controller/clientC.js");
 const feature = require("./controller/featureC.js");
 const house_catalogue = require("./controller/house_catalogueC.js");
-const { login } = require('./controller/securityC.js'); // Import the login function directly
+const { login } = require('./controller/securityC.js');
 const selected_house = require("./controller/selected_houseC.js");
 const selected_house_feature = require("./controller/selected_house_featureC.js");
 

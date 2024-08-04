@@ -26,8 +26,6 @@ app.get("/:client_id/:house_model_id", security.verify, (req, res) => {
     });
 });
 
-
-
 app.post('/', security.verify, (req, res) => {
     let selected_house_feature = req.body;
     selected_house_featureDb.create(req.pool, selected_house_feature, (err, result) => {
