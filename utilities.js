@@ -32,7 +32,7 @@ function validate(params, expectedTypes) {
                 throw errorObject;
             }
 
-        } else if (expectedType === 'email') { // email
+        } else if (expectedType === 'email') { //email
             const allowedCharacters = /^[A-Za-z0-9._%-ñÑҫÇç]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
             if (!allowedCharacters.test(params[i])) {
                 throw errorObject;
