@@ -10,8 +10,15 @@ function login(req, res) {
 
     clientDb.getCU(req.pool, username, (err, result) => {
         try {
+            if (!result || !result.result || result.result.length === 0) {
+                return res.status(404).send({
+                    message: `No registered ${entity} found with the entered search criteria`
+                });
+            }
+
             const user = result.result[0];
             const same = bcrypt.compareSync(password, user.password);
+
             if (same) {
                 const userPayload = {
                     username: user.username,
@@ -28,7 +35,7 @@ function login(req, res) {
 
                 const token = createJWT(header, payload, 'secret');
                 res.json({
-                    datos: userPayload,
+                    data: userPayload,
                     token: token
                 });
             } else {
@@ -37,10 +44,10 @@ function login(req, res) {
                 });
             }
         } catch (err) {
-            u.globalError(req.pool, res, err, null, entity);
+            u.globalError(req.pool, (errorResponse) => res.status(errorResponse.status).json(errorResponse), err, null, entity);
         }
     });
-};
+}
 
 function verify(req, res, next) {
     if (req.headers["token"]) {

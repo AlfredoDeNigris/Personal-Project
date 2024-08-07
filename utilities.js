@@ -45,11 +45,11 @@ function validate(params, expectedTypes) {
 };
 
 function globalError(pool, callback, err, result, entity) {
-    console.log("Error:", err); //This line is here to help identify unknow errors, will be deleted after app is done.
+    console.log("Error:", err); // This line is here to help identify unknown errors, will be deleted after app is done
     if (!pool) {
         callback({
             status: 500,
-            message: 'Database pool pool is not available',
+            message: 'Database pool is not available',
             detail: err
         });
         return;
@@ -92,7 +92,7 @@ function globalError(pool, callback, err, result, entity) {
             detail: err
         });
     }
-};
+}
 
 function executeQuery(pool, query, params, successMessage, callback, entity) {
     pool.getConnection((err, connection) => {
@@ -143,7 +143,7 @@ function readQuery(pool, query, params, callback, entity) {
             });
         }
     });
-};
+}
 
 
 module.exports = {
