@@ -240,21 +240,26 @@ Server should answer with status code 404 and corresponding message if any recor
 
 # Highlights
 
-1. Connection Pool for Docker: The application efficiently manages database connections within Docker containers using a connection pool, ensuring 
-optimal resource usage and scalability.
+1. ### Connection Pool for Docker:
 
-2. Middleware Validation: All routes that handle data submissions, whether via URL or req.body, are processed through middleware that utilizes the 
-express-validator module. This ensures that required data is present and correctly formatted before proceeding. The connection pool is checked 
-asynchronously, ensuring that routes are only processed when the pool is successfully established, implemented using the connectWithRetry function 
-in "index.js".
+The application manages database connections within Docker containers using a connection pool, ensuring optimal resource usage and scalability.
 
-3. Enhanced Validation with express-validator: The application leverages the express-validator module for robust validation of incoming requests, 
-ensuring data integrity and security.
+2. ### Middleware Validation:
 
-4. Custom Utility Functions: The utilities.js file contains custom functions like globalError for personalized error messaging and readQuery and executeQuery for executing database queries, facilitating the scalability and maintainability of the application.
+All routes that handle data submissions are processed through middleware that utilizes the express-validator module. Ensuring that required data is
+present and correctly formatted before proceeding. The connection pool is checked asynchronously, ensuring that routes are only processed when the pool is successfully established, implemented using the "retryConnection" function in "index.js".
 
-5. View/Controller Design Pattern: The application is structured using the view/controller design pattern, separating concerns and making the 
-codebase easier to manage and extend.
+3. ### Enhanced Validation with express-validator:
+
+The application leverages the express-validator module for robust validation of incoming requests, ensuring data integrity and security.
+
+4. ### Custom Utility Functions:
+
+The "utilities.js" file contains custom functions like "globalError" for personalized error messaging and "readQuery" and "executeQuery" for executing database queries, facilitating the scalability and maintainability of the application.
+
+5. ### View/Controller Design Pattern:
+
+The application is structured using the view/controller design pattern, separating concerns and making the codebase easier to manage and extend.
 
 # Installation
 
