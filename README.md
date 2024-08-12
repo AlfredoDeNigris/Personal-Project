@@ -6,7 +6,7 @@
 
 - [API Documentation](#api-documentation)
 
-- [Highlights] (#Highlights)
+- [Highlights](#Highlights)
 
 - [Installation](#Installation)
 
