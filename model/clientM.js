@@ -18,11 +18,8 @@ clientDb.getC = (pool, callback) => {
 //Function to get a specific client by client_id
 clientDb.getCP = (pool, client_id, callback) => {
     try {
-        const expectedTypes = ['number'];
-        let params = [client_id];
-        u.validate(params, expectedTypes);
-
         const query = 'SELECT full_name, username, password, billing_address, phone_number, email FROM client WHERE client_id = ?';
+        const params = [client_id];
 
         u.readQuery(pool, query, params, callback, entity);
     } catch (err) {
@@ -33,11 +30,8 @@ clientDb.getCP = (pool, client_id, callback) => {
 //Function to get a specific client by username
 clientDb.getCU = (pool, username, callback) => {
     try {
-        const expectedTypes = ['text'];
-        let params = [username];
-        u.validate(params, expectedTypes);
-
         const query = 'SELECT full_name, username, password, billing_address, phone_number, email FROM client WHERE username = ?';
+        const params = [username];
 
         u.readQuery(pool, query, params, callback, entity);
     } catch (err) {
@@ -48,14 +42,9 @@ clientDb.getCU = (pool, username, callback) => {
 //Function to create a new client
 clientDb.create = (pool, client, callback) => {
     try {
-        const expectedTypes = ['string', 'text', 'password', 'text', 'number', 'email'];
-        const params = [client.full_name, client.username, client.password, client.billing_address, client.phone_number, client.email];
-        u.validate(params, expectedTypes);
-
-        let hashedPassword = bcrypt.hashSync(client.password, 10);
-        params[2] = hashedPassword;
-
         const query = 'INSERT INTO client (full_name, username, password, billing_address, phone_number, email) VALUES (?, ?, ?, ?, ?, ?)';
+        let hashedPassword = bcrypt.hashSync(client.password, 10);
+        const params = [client.full_name, client.username, hashedPassword, client.billing_address, client.phone_number, client.email];
         let successMessage = `Your registration has been successful.`;
 
         u.executeQuery(pool, query, params, successMessage, callback, entity);
@@ -67,15 +56,10 @@ clientDb.create = (pool, client, callback) => {
 //Function to update a client's information
 clientDb.update = (pool, client_id, client, callback) => {
     try {
-        const expectedTypes = ['string', 'text', 'password', 'text', 'number', 'email', 'number'];
-        const params = [client.full_name, client.username, client.password, client.billing_address, client.phone_number, client.email, client_id];
-        u.validate(params, expectedTypes);
-
-        let hashedPassword = bcrypt.hashSync(client.password, 10);
-        params[2] = hashedPassword;
-
         const query = 'UPDATE client SET full_name = ?, username = ?, password = ?, billing_address = ?, phone_number = ?, email = ? WHERE client_id = ?';
-        let successMessage = `Profile information updated sucessfully!`;
+        let hashedPassword = bcrypt.hashSync(client.password, 10);
+        const params = [client.full_name, client.username, hashedPassword, client.billing_address, client.phone_number, client.email, client_id];
+        let successMessage = `Profile information updated successfully!`;
 
         u.executeQuery(pool, query, params, successMessage, callback, entity);
     } catch (err) {
@@ -86,17 +70,15 @@ clientDb.update = (pool, client_id, client, callback) => {
 //Function to delete a client by client_id
 clientDb.delete = (pool, client_id, callback) => {
     try {
-        const expectedTypes = ['number'];
-        let params = [client_id];
-        u.validate(params, expectedTypes);
-
         const query = 'DELETE FROM client WHERE client_id = ?';
-        let successMessage = `Client deleted sucessfuly`;
+        const params = [client_id];
+        let successMessage = `Client deleted successfully`;
 
         u.executeQuery(pool, query, params, successMessage, callback, entity);
     } catch (err) {
         u.globalError(pool, callback, err, null, entity);
     }
 };
+
 
 module.exports = clientDb;

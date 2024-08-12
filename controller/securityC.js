@@ -1,18 +1,25 @@
 require('rootpath')();
 const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator');
 const { createJWT, verifyJWT, ExpiredTokenError, InvalidTokenError } = require("tokenGenerator.js");
 const u = require("utilities.js");
 const clientDb = require("model/clientM.js");
 const entity = "client";
 
+
 function login(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { username, password } = req.body;
 
     clientDb.getCU(req.pool, username, (err, result) => {
         try {
             if (!result || !result.result || result.result.length === 0) {
                 return res.status(404).send({
-                    message: `No registered ${entity} found with the entered search criteria`
+                    message: `No registered client found with the entered search criteria`
                 });
             }
 
@@ -30,7 +37,7 @@ function login(req, res) {
                 const header = { alg: 'HS256', typ: 'JWT' };
                 const payload = {
                     ...userPayload,
-                    exp: Math.floor(Date.now() / 1000) + (72 * 60 * 60) //Set expiration to 72 hours
+                    exp: Math.floor(Date.now() / 1000) + (72 * 60 * 60) // Set expiration to 72 hours
                 };
 
                 const token = createJWT(header, payload, 'secret');
@@ -49,11 +56,12 @@ function login(req, res) {
     });
 }
 
+
 function verify(req, res, next) {
-    if (req.headers["token"]) {
+    const token = req.headers["token"];
+
+    if (token) {
         try {
-            const token = req.headers["token"];
-            // Verify the token using the custom implementation
             const verifiedPayload = verifyJWT(token, "secret");
 
             if (verifiedPayload) {
@@ -66,7 +74,7 @@ function verify(req, res, next) {
             }
         } catch (error) {
             if (error instanceof ExpiredTokenError) {
-                res.status(403).send({ message: "Token has expire" });
+                res.status(403).send({ message: "Token has expired" });
             } else if (error instanceof InvalidTokenError) {
                 res.status(403).send({ message: "Invalid token" });
             } else {
@@ -79,5 +87,6 @@ function verify(req, res, next) {
         });
     }
 };
+
 
 module.exports = { login, verify };

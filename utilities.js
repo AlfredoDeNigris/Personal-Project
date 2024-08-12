@@ -1,51 +1,5 @@
-function validate(params, expectedTypes) {
-    for (let i = 0; i < params.length; i++) {
-        const expectedType = expectedTypes[i];
-        const actualType = typeof params[i];
-        const errorObject = {
-            message: `The data type entered at position ${i + 1} is incorrect. Expected: ${expectedType} but received: ${actualType}`,
-            code: "INVALID_DATA_TYPE"
-        };
-
-        if (expectedType === 'number') { //phone_number, final_price, client_id, house_model_id, feature_id, unit_cost, quantity.
-            const inputStr = params[i].toString();
-            for (let j = 0; j < inputStr.length; j++) {
-                if (isNaN(inputStr[j])) {
-                    throw errorObject;
-                }
-            }
-            params[i] = parseInt(params[i]);
-
-        } else if (expectedType === 'string') { //full_name.
-            const allowedCharacters = /^[a-zA-ZáÁéÉíÍóÓúÚüÜñÑçÇ\s]+$/;
-            if (!allowedCharacters.test(params[i])) {
-                throw errorObject;
-            }
-
-        } else if (expectedType === 'password') { //password.
-            if (actualType !== 'string') {
-                throw errorObject;
-            }
-
-        } else if (expectedType === 'text') { //username, billing_address, review, information
-            if (actualType !== 'string' || params[i] === '') {
-                throw errorObject;
-            }
-
-        } else if (expectedType === 'email') { //email
-            const allowedCharacters = /^[A-Za-z0-9._%-ñÑҫÇç]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-            if (!allowedCharacters.test(params[i])) {
-                throw errorObject;
-            }
-
-        } else if (expectedType !== actualType) {
-            throw errorObject;
-        }
-    }
-};
-
 function globalError(pool, callback, err, result, entity) {
-    console.log("Error:", err); // This line is here to help identify unknown errors, will be deleted after app is done
+    console.log("Error:", err); //This line is here to help identify unknown errors, will be deleted after app is done
     if (!pool) {
         callback({
             status: 500,
@@ -147,7 +101,6 @@ function readQuery(pool, query, params, callback, entity) {
 
 
 module.exports = {
-    validate: validate,
     globalError: globalError,
     executeQuery: executeQuery,
     readQuery: readQuery

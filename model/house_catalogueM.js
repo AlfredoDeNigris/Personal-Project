@@ -14,16 +14,12 @@ house_catalogueDb.getHC = (pool, callback) => {
     }
 };
 
-//Function to get all housing options information with in the inputed budget
+//Function to get all housing options information within the inputted budget
 house_catalogueDb.getHCB = (pool, budget, callback) => {
     try {
-        const expectedTypes = ['number'];
-        let params = [budget];
-        u.validate(params, expectedTypes);
-
         const query = 'SELECT review, construction_time, bathroom, bedroom, comercial_cost FROM house_model WHERE comercial_cost <= ?';
 
-        u.readQuery(pool, query, params, callback, entity);
+        u.readQuery(pool, query, [budget], callback, entity);
     } catch (err) {
         u.globalError(pool, callback, err, null, entity);
     }
@@ -32,13 +28,9 @@ house_catalogueDb.getHCB = (pool, budget, callback) => {
 //Function to get a specific house_model by house_model_id
 house_catalogueDb.getHCC = (pool, house_model_id, callback) => {
     try {
-        const expectedTypes = ['number'];
-        let params = [house_model_id];
-        u.validate(params, expectedTypes);
-
         const query = 'SELECT review, construction_time, bathroom, bedroom, comercial_cost FROM house_model WHERE house_model_id = ?';
 
-        u.readQuery(pool, query, params, callback, entity);
+        u.readQuery(pool, query, [house_model_id], callback, entity);
     } catch (err) {
         u.globalError(pool, callback, err, null, entity);
     }

@@ -6,6 +6,8 @@
 
 - [API Documentation](#api-documentation)
 
+- [Highlights] (#Highlights)
+
 - [Installation](#Installation)
 
 - [Run](#Run)
@@ -195,24 +197,7 @@ Server should answer with status code 400 and corresponding message if client_id
 
 Server should answer with status code 404 and corresponding message if record with id === client_id does not exist.
 
-### POST api/selected-house - create a new selected_house
-
-curl -X POST http://localhost:8080/api/selected_house  
-  -H 'Content-Type: application/json'  
-  -d '{  
-    "client_id": 1,  
-    "house_id": 2,  
-    "final_price": 150000  
-}'
-
-
-The request body should contain the required information for creating a new selected_house, such as client_id, house_model_id, and final_price.
-
-Server should answer with status code 201 and newly created record.
-
-Server should answer with status code 400 and corresponding message if request body does not contain required fields.
-
-### DELETE api/selected-house/:client_id/:house_model_id - deletes existing selected_house
+### DELETE api/selected-house/:client_id/:house_model_id - deletes selected_house by client_id and house_model_id
 
 curl -X DELETE http://localhost:8080/api/selected_house/{client_id}/{house_model_id}
 
@@ -243,36 +228,33 @@ Server should answer with status code 201 and newly created record.
 
 Server should answer with status code 400 and corresponding message if request body does not contain required fields.
 
-### PUT api/selected_house/:client_id/:house_model_id/:feature_id - updates selected_house_feature information
-
-curl -X PUT http://localhost:8080/api/selected_house/{client_id}/{house_model_id}/{feature_id}  
-  -H 'Content-Type: application/json'  
-  -d '{  
-    "client_id": 1,  
-    "house_model_id": 2,  
-    "feature_id": 3,  
-    "quantity": 4  
-}'
-
-
-The request body should contain the required information for editing the existin selected_house_feature information, such as client_id, house_model_id, feature_id and quantity.
-
-Server should answer with status code 200 and record with id === client_id, record with id === house_model_id and id === feature_id if they  exists.
-
-Server should answer with status code 400 and corresponding message if either client_id and/or house_model_id and/or feature_id are invalid.
-
-Server should answer with status code 404 and corresponding message if any record with id === client_id does not exist and/or record with id === house_model_id does not exist and/or feature_id does not exist.
-
-### DELETE api/selected_house/:client_id/:house_model_id/:feature_id - deletes existing selected_house_feature
+### DELETE api/selected_house/:client_id/:house_model_id/:feature_id - deletes a feature associated to a specific selected_house by client_id,house_model_id, and feature_id
 
 curl -X DELETE http://localhost:8080/api/selected_house/{client_id}/{house_model_id}/{feature_id}
-
 
 Server should answer with status code 204 if the record was found and deleted.
 
 Server should answer with status code 400 and corresponding message if either client_id and/or house_model_id and/or feature_id are invalid.
 
 Server should answer with status code 404 and corresponding message if any record with id === client_id does not exist and/or record with id === house_model_id does not exist and/or feature_id does not exist.
+
+# Highlights
+
+1. Connection Pool for Docker: The application efficiently manages database connections within Docker containers using a connection pool, ensuring 
+optimal resource usage and scalability.
+
+2. Middleware Validation: All routes that handle data submissions, whether via URL or req.body, are processed through middleware that utilizes the 
+express-validator module. This ensures that required data is present and correctly formatted before proceeding. The connection pool is checked 
+asynchronously, ensuring that routes are only processed when the pool is successfully established, implemented using the connectWithRetry function 
+in "index.js".
+
+3. Enhanced Validation with express-validator: The application leverages the express-validator module for robust validation of incoming requests, 
+ensuring data integrity and security.
+
+4. Custom Utility Functions: The utilities.js file contains custom functions like globalError for personalized error messaging and readQuery and executeQuery for executing database queries, facilitating the scalability and maintainability of the application.
+
+5. View/Controller Design Pattern: The application is structured using the view/controller design pattern, separating concerns and making the 
+codebase easier to manage and extend.
 
 # Installation
 
@@ -361,7 +343,6 @@ npm install
 # Run
 
 ## Run in docker container
-
 
 To run the application in a Docker container, you should have Docker installed on your system.
 
