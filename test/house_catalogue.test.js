@@ -133,4 +133,17 @@ describe('House Catalouge API Endpoints', () => {
             ])
         );
     });
+
+    it('should return 500 and error message when database operation fails', async () => {
+        house_catalogueDb.getHCC.mockImplementation((pool, house_model_id, callback) => {
+            const error = { status: 500, message: 'Database error' };
+            callback(error, null);
+        });
+
+        const response = await request(app)
+            .get('/api/house-catalogue/house/10')
+
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ status: 500, message: 'Database error' });
+    });
 });
