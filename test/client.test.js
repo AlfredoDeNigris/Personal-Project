@@ -73,7 +73,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/client/profile/1') //Solicitud GET con un client_id válido
+            .get('/api/client/profile/1')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
@@ -82,7 +82,7 @@ describe('Client API Endpoints', () => {
 
     it('should return 400 if client_id is not a number', async () => {
         const response = await request(app)
-            .get('/api/client/profile/invalid-id') //Solicitud GET con un client_id inválido
+            .get('/api/client/profile/invalid-id')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
@@ -100,7 +100,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/client/profile/1') //Solicitud GET con un client_id válido
+            .get('/api/client/profile/1')
             .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
@@ -197,7 +197,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .put('/api/client/profile/1') // Ruta con client_id válido
+            .put('/api/client/profile/1')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
@@ -207,16 +207,16 @@ describe('Client API Endpoints', () => {
 
     it('should return 400 and validation errors when input data is invalid', async () => {
         const mockData = {
-            full_name: 'John123', // Nombre inválido
-            username: '',         // Falta el nombre de usuario
-            password: '',         // Falta la contraseña
-            billing_address: '',  // Falta la dirección de facturación
-            phone_number: 'ABC',  // Número de teléfono no numérico
-            email: 'invalidemail' // Email inválido
+            full_name: 'John123',
+            username: '',
+            password: '',
+            billing_address: '',
+            phone_number: 'ABC',
+            email: 'invalidemail'
         };
 
         const response = await request(app)
-            .put('/api/client/profile/1') // Ruta con client_id válido
+            .put('/api/client/profile/1')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
@@ -246,7 +246,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .put('/api/client/profile/1') // Ruta con client_id válido
+            .put('/api/client/profile/1')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
@@ -263,7 +263,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .delete('/api/client/profile/1') // Solicitud DELETE con un client_id válido
+            .delete('/api/client/profile/1')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
@@ -272,7 +272,7 @@ describe('Client API Endpoints', () => {
 
     it('should return 400 and validation errors when client_id is invalid', async () => {
         const response = await request(app)
-            .delete('/api/client/profile/invalid_id') // client_id no es numérico
+            .delete('/api/client/profile/invalid_id')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
@@ -287,7 +287,7 @@ describe('Client API Endpoints', () => {
         });
 
         const response = await request(app)
-            .delete('/api/client/profile/1') // Solicitud DELETE con un client_id válido
+            .delete('/api/client/profile/1')
             .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
