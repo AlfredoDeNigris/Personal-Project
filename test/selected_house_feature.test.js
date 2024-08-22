@@ -42,7 +42,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/selected-house-feature')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -57,7 +56,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/selected-house-feature')
-            .set('Authorization', ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -77,7 +75,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/selected-house-feature/123/456')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -86,7 +83,6 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 400 if client_id or house_model_id is not a number', async () => {
         const response = await request(app)
             .get('/api/selected-house-feature/invalid-client-id/456')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -111,7 +107,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/selected-house-feature/123/456')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -134,7 +129,6 @@ describe('Selected House Feature API Endpoints', () => {
                 feature_id: 3,
                 quantity: 1
             })
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -148,7 +142,6 @@ describe('Selected House Feature API Endpoints', () => {
                 house_model_id: 'invalid-house-model-id',
                 final_price: 'invalid-final-price'
             })
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -187,7 +180,6 @@ describe('Selected House Feature API Endpoints', () => {
                 house_model_id: 2,
                 final_price: 300000
             })
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -203,7 +195,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .delete('/api/selected-house-feature/1/2/3')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -212,7 +203,6 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 400 if validation fails', async () => {
         const response = await request(app)
             .delete('/api/selected-house-feature/invalid-client-id/invalid-house-model-id/invalid-feature-id')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -246,7 +236,6 @@ describe('Selected House Feature API Endpoints', () => {
 
         const response = await request(app)
             .delete('/api/selected-house-feature/1/2/3')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });

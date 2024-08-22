@@ -28,7 +28,6 @@ describe('House Catalouge API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/house-catalogue')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -42,7 +41,6 @@ describe('House Catalouge API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/house-catalogue')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -61,7 +59,6 @@ describe('House Catalouge API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/house-catalogue/5000000')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -70,7 +67,6 @@ describe('House Catalouge API Endpoints', () => {
     it('should return 400 if the budget parameter is not a number', async () => {
         const response = await request(app)
             .get('/api/house-catalogue/invalid-budget')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -94,7 +90,6 @@ describe('House Catalouge API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/house-catalogue/500000')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -116,7 +111,6 @@ describe('House Catalouge API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/house-catalogue/house/1')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -125,7 +119,6 @@ describe('House Catalouge API Endpoints', () => {
     it('should return 400 if house_model_id is not a number', async () => {
         const response = await request(app)
             .get('/api/house-catalogue/house/invalid-id')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(

@@ -36,7 +36,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/client')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -50,7 +49,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/client')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -74,7 +72,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/client/profile/1')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -83,7 +80,6 @@ describe('Client API Endpoints', () => {
     it('should return 400 if client_id is not a number', async () => {
         const response = await request(app)
             .get('/api/client/profile/invalid-id')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -101,7 +97,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .get('/api/client/profile/1')
-            .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -198,7 +193,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .put('/api/client/profile/1')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
         expect(response.status).toBe(200);
@@ -217,7 +211,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .put('/api/client/profile/1')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
         expect(response.status).toBe(400);
@@ -247,7 +240,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .put('/api/client/profile/1')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg')
             .send(mockData);
 
         expect(response.status).toBe(500);
@@ -264,7 +256,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .delete('/api/client/profile/1')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(200);
         expect(response.body.message).toBe(successMessage);
@@ -273,7 +264,6 @@ describe('Client API Endpoints', () => {
     it('should return 400 and validation errors when client_id is invalid', async () => {
         const response = await request(app)
             .delete('/api/client/profile/invalid_id')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -288,7 +278,6 @@ describe('Client API Endpoints', () => {
 
         const response = await request(app)
             .delete('/api/client/profile/1')
-            .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJmdWxsX25hbWUiOiJDb24iLCJlbWFpbCI6InNpbkRpYUBnbWFpbC5jb20iLCJleHAiOjE3MjQ0NTM4OTl9.lgucqxoxcTjtdf2FlEa5wdxu8TIN7sv3wUswFdxlxvg');
 
         expect(response.status).toBe(500);
         expect(response.body.message).toBe('Database error');

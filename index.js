@@ -29,6 +29,11 @@ app.use('/api/house-catalogue', house_catalogue);
 app.use('/api/selected-house', selected_house);
 app.use('/api/selected-house-feature', selected_house_feature);
 
+//Default route to check server's status
+app.get('/api/isAlive', (req, res) => {
+    res.sendStatus(200);
+});
+
 //Retry connection and start server
 retryConnection()
     .then(pool => {
@@ -44,11 +49,6 @@ retryConnection()
             .catch(err => console.error('Failed to execute SQL scripts:', err.message));
 
         app.post('/api/login', login);
-
-        //Default route to check server's status
-        app.get('/api/isAlive', (req, res) => {
-            res.sendStatus(200);
-        });
 
         //Start the Express server
         app.listen(config.server.port, (err) => {
