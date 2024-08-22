@@ -9,7 +9,7 @@ app.get("/", security.verify, (req, res) => {
         if (err) {
             res.status(err.status).send(err);
         } else {
-            res.json(result);
+            res.status(200).json(result);
         }
     });
 });
@@ -29,7 +29,7 @@ app.get("/:budget", security.verify,
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }
@@ -50,7 +50,7 @@ app.get("/house/:house_model_id", security.verify,
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }

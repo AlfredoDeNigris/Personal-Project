@@ -1,9 +1,8 @@
-require('rootpath')();
 const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator');
-const { createJWT, verifyJWT, ExpiredTokenError, InvalidTokenError } = require("tokenGenerator.js");
-const u = require("utilities.js");
-const clientDb = require("model/clientM.js");
+const { createJWT, verifyJWT, ExpiredTokenError, InvalidTokenError } = require("../tokenGenerator.js");
+const u = require("../utilities.js");
+const clientDb = require('../model/clientM.js');
 const entity = "client";
 
 
@@ -37,7 +36,7 @@ function login(req, res) {
                 const header = { alg: 'HS256', typ: 'JWT' };
                 const payload = {
                     ...userPayload,
-                    exp: Math.floor(Date.now() / 1000) + (72 * 60 * 60) // Set expiration to 72 hours
+                    exp: Math.floor(Date.now() / 1000) + (72 * 60 * 60) //Set expiration to 72 hours
                 };
 
                 const token = createJWT(header, payload, 'secret');

@@ -10,7 +10,7 @@ app.get("/", security.verify, (req, res) => {
         if (err) {
             res.status(err.status).send(err);
         } else {
-            res.json(result);
+            res.status(200).json(result);
         }
     });
 });
@@ -30,7 +30,7 @@ app.get("/profile/:client_id", security.verify,
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }
@@ -63,7 +63,7 @@ app.post('/register',
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }
@@ -97,7 +97,7 @@ app.put("/profile/:client_id", security.verify,
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }
@@ -118,7 +118,7 @@ app.delete("/profile/:client_id", security.verify,
             if (err) {
                 res.status(err.status).send(err);
             } else {
-                res.json(result);
+                res.status(200).json(result);
             }
         });
     }

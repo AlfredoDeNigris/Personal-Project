@@ -22,6 +22,13 @@ const { login } = require('./controller/securityC.js');
 const selected_house = require("./controller/selected_houseC.js");
 const selected_house_feature = require("./controller/selected_house_featureC.js");
 
+//Routes
+app.use('/api/client', client);
+app.use('/api/features', feature);
+app.use('/api/house-catalogue', house_catalogue);
+app.use('/api/selected-house', selected_house);
+app.use('/api/selected-house-feature', selected_house_feature);
+
 //Retry connection and start server
 retryConnection()
     .then(pool => {
@@ -36,13 +43,7 @@ retryConnection()
             .then(() => executeScript(pool, defaultOptions))
             .catch(err => console.error('Failed to execute SQL scripts:', err.message));
 
-        //Routes
-        app.use('/api/client', client);
-        app.use('/api/features', feature);
-        app.use('/api/house-catalogue', house_catalogue);
         app.post('/api/login', login);
-        app.use('/api/selected-house', selected_house);
-        app.use('/api/selected-house-feature', selected_house_feature);
 
         //Default route to check server's status
         app.get('/api/isAlive', (req, res) => {
@@ -67,3 +68,5 @@ retryConnection()
         console.error('Failed to connect to the database:', err.message);
         process.exit(1);
     });
+
+module.exports = app;
