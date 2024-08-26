@@ -17,20 +17,22 @@ jest.mock('../model/selected_houseM.js', () => ({
 describe('Selected House API Endpoints', () => {
     //GET /
     it('should return 200 and the correct data if the request is successful', async () => {
-        const mockData = [{
-            full_name: 'John Doe',
-            username: 'johndoe',
-            billing_address: '123 Elm St',
-            phone_number: '1234567890',
-            email: 'john@example.com',
-            review: 'Great house!',
-            construction_time: 12,
-            bathroom: 2,
-            bedroom: 3,
-            square_meters: 150,
-            worker_cost: 10000,
-            comercial_cost: 50000
-        }];
+        const mockData = [
+            {
+                full_name: 'John Doe',
+                username: 'johndoe',
+                billing_address: '123 Elm St',
+                phone_number: '1234567890',
+                email: 'john@example.com',
+                review: 'Modern family house with spacious rooms.',
+                construction_time: 650,
+                bathroom: 2,
+                bedroom: 3,
+                square_meters: 120,
+                worker_cost: 15000.00,
+                comercial_cost: 200000.00
+            }
+        ];
 
         selected_houseDb.getSH.mockImplementation((pool, callback) => {
             callback(null, mockData);
@@ -59,14 +61,17 @@ describe('Selected House API Endpoints', () => {
 
     //GET /:client_id
     it('should return 200 and the correct data if the request is successful', async () => {
-        const mockData = [{
-            review: 'Great house!',
-            construction_time: 12,
-            bathroom: 2,
-            bedroom: 3,
-            square_meters: 150,
-            comercial_cost: 50000
-        }];
+        const mockData = [
+            {
+                review: 'Modern family house with spacious rooms.',
+                construction_time: 650,
+                bathroom: 2,
+                bedroom: 3,
+                square_meters: 120,
+                worker_cost: 15000.00,
+                comercial_cost: 200000.00
+            }
+        ];
 
         selected_houseDb.getSHC.mockImplementation((pool, client_id, callback) => {
             callback(null, mockData);

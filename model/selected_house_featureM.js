@@ -6,16 +6,17 @@ const entity = "selected house feature";
 //Function to fetch all selected_house_feature information
 selected_house_featureDb.getSHF = (pool, callback) => {
     try {
-        const query = `SELECT c.full_name, c.username, c.billing_address, 
-                              c.phone_number, c.email, hm.review, hm.construction_time, 
-                              hm.bathroom, hm.bedroom, hm.square_meters, hm.worker_cost, 
-                              hm.comercial_cost, f.feature_name, f.unit_cost, f.information 
-                       FROM selected_house sh 
-                       JOIN client c ON sh.client_id = c.client_id 
-                       JOIN house_model hm ON sh.house_model_id = hm.house_model_id 
-                       JOIN selected_house_feature shf ON sh.client_id = shf.client_id 
-                          AND sh.house_model_id = shf.house_model_id 
-                       JOIN feature f ON shf.feature_id = f.feature_id;`;
+        const query = `
+        SELECT c.full_name, c.username, c.billing_address, 
+        c.phone_number, c.email, hm.review, hm.construction_time, 
+        hm.bathroom, hm.bedroom, hm.square_meters, hm.worker_cost, 
+        hm.comercial_cost, f.feature_name, f.unit_cost, f.information 
+        FROM selected_house sh 
+        JOIN client c ON sh.client_id = c.client_id 
+        JOIN house_model hm ON sh.house_model_id = hm.house_model_id 
+        JOIN selected_house_feature shf ON sh.client_id = shf.client_id 
+        AND sh.house_model_id = shf.house_model_id 
+        JOIN feature f ON shf.feature_id = f.feature_id;`;
 
         u.readQuery(pool, query, null, callback, entity);
     } catch (err) {
@@ -26,10 +27,11 @@ selected_house_featureDb.getSHF = (pool, callback) => {
 //Function to get a specific selected_house_feature by client_id and house_model_id
 selected_house_featureDb.getSHFC = (pool, client_id, house_model_id, callback) => {
     try {
-        const query = `SELECT f.feature_name, f.unit_cost, f.information 
-                       FROM selected_house_feature shf 
-                       JOIN feature f ON shf.feature_id = f.feature_id 
-                       WHERE shf.client_id = ? AND shf.house_model_id = ?;`;
+        const query = `
+        SELECT f.feature_name, f.unit_cost, f.information 
+        FROM selected_house_feature shf 
+        JOIN feature f ON shf.feature_id = f.feature_id 
+        WHERE shf.client_id = ? AND shf.house_model_id = ?;`;
 
         u.readQuery(pool, query, [client_id, house_model_id], callback, entity);
     } catch (err) {

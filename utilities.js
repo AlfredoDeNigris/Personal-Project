@@ -88,7 +88,7 @@ function executeQuery(pool, query, params, successMessage, callback, entity) {
 };
 
 function readQuery(pool, query, params, callback, entity) {
-    pool.query(query, params, (err, result) => {
+    pool.getConnection(query, params, (err, result) => {
         if (err || result.length === 0) {
             globalError(pool, callback, err, result, entity);
         } else {

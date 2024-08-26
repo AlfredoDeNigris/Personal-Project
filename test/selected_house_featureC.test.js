@@ -18,23 +18,25 @@ jest.mock('../model/selected_house_featureM.js', () => ({
 describe('Selected House Feature API Endpoints', () => {
     //GET /
     it('should return 200 and the correct data if the request is successful', async () => {
-        const mockData = [{
-            full_name: 'John Doe',
-            username: 'johndoe',
-            billing_address: '123 Elm St',
-            phone_number: '1234567890',
-            email: 'john@example.com',
-            review: 'Great house!',
-            construction_time: 12,
-            bathroom: 2,
-            bedroom: 3,
-            square_meters: 150,
-            worker_cost: 10000,
-            comercial_cost: 50000,
-            feature_name: 'Pool',
-            unit_cost: 5000,
-            information: 'In-ground pool'
-        }];
+        const mockData = [
+            {
+                full_name: 'John Doe',
+                username: 'johndoe',
+                billing_address: '123 Elm St',
+                phone_number: '1234567890',
+                email: 'john@example.com',
+                review: 'Modern family house with spacious rooms.',
+                construction_time: 650,
+                bathroom: 2,
+                bedroom: 3,
+                square_meters: 120,
+                worker_cost: 15000.00,
+                comercial_cost: 200000.00,
+                feature_name: 'Swimming Pool',
+                unit_cost: 10000.00,
+                information: 'A private pool with all necessary facilities.'
+            }
+        ];
 
         selected_house_featureDb.getSHF.mockImplementation((pool, callback) => {
             callback(null, mockData);
@@ -63,11 +65,13 @@ describe('Selected House Feature API Endpoints', () => {
 
     //GET /:client_id/:house_model_id
     it('should return 200 and the correct data if the request is successful', async () => {
-        const mockData = [{
-            feature_name: 'Pool',
-            unit_cost: 5000,
-            information: 'In-ground pool'
-        }];
+        const mockData = [
+            {
+                feature_name: 'Pool',
+                unit_cost: 5000,
+                information: 'In-ground pool'
+            }
+        ];
 
         selected_house_featureDb.getSHFC.mockImplementation((pool, client_id, house_model_id, callback) => {
             callback(null, mockData);
