@@ -103,6 +103,24 @@ describe('Selected House Feature Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
+    it('catch block', () => {
+        const error = new Error('Query error');
+
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        selected_house_featureDb.getSHF(poolMock, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'selected house feature'
+        );
+    });
+
     //getSHFC
     it('should return 200 and a specific selected_house_feature by client_id and house_model_id', async () => {
         const mockData = [
@@ -176,6 +194,24 @@ describe('Selected House Feature Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
+    it('catch block', () => {
+        const error = new Error('Query error');
+
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        selected_house_featureDb.getSHFC(poolMock, 1, 2, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'selected house feature'
+        );
+    });
+
     //create
     it('should create a new selected house feature', () => {
         const mockData = {
@@ -197,6 +233,40 @@ describe('Selected House Feature Model', () => {
             `START TRANSACTION;
                      INSERT INTO selected_house (client_id, house_model_id, final_price) 
                      VALUES (?, ?, ?);COMMIT;`,
+            expectedParams,
+            'New house created successfully',
+            callbackMock,
+            'selected house feature'
+        );
+    });
+
+    it('should create a new selected house feature with additional feature details', () => {
+        const mockData = {
+            client_id: 1,
+            house_model_id: 2,
+            final_price: 300000,
+            feature_id: 3,
+            quantity: 5
+        };
+
+        const expectedParams = [
+            mockData.client_id,
+            mockData.house_model_id,
+            mockData.final_price,
+            mockData.client_id,
+            mockData.house_model_id,
+            mockData.feature_id,
+            mockData.quantity
+        ];
+
+        selected_house_featureDb.create(poolMock, mockData, callbackMock);
+
+        expect(u.executeQuery).toHaveBeenCalledWith(
+            poolMock,
+            `START TRANSACTION;
+                     INSERT INTO selected_house (client_id, house_model_id, final_price) 
+                     VALUES (?, ?, ?);INSERT INTO selected_house_feature (client_id, house_model_id, feature_id, quantity) 
+                      VALUES (?, ?, ?, ?);COMMIT;`,
             expectedParams,
             'New house created successfully',
             callbackMock,
@@ -243,6 +313,30 @@ describe('Selected House Feature Model', () => {
         };
 
         const error = new Error('Something went wrong');
+        u.executeQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        selected_house_featureDb.create(poolMock, mockData, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'selected house feature'
+        );
+    });
+
+    it('catch block', () => {
+        const mockData = {
+            client_id: 1,
+            house_model_id: 2,
+            final_price: 300000
+        };
+
+        const error = new Error('Transaction error');
+
         u.executeQuery.mockImplementationOnce(() => {
             throw error;
         });
@@ -367,5 +461,23 @@ describe('Selected House Feature Model', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual(error);
+    });
+
+    it('catch block', () => {
+        const error = new Error('Delete error');
+
+        u.executeQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        selected_house_featureDb.delete(poolMock, 1, 2, 3, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'selected house feature'
+        );
     });
 });

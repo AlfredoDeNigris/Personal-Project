@@ -88,6 +88,23 @@ describe('Client Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
+    it('catch block', () => {
+        const error = new Error('Test Error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        clientDb.getC(poolMock, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'client'
+        );
+    });
+
     //getCP
     it('should return 200 and client profile data when client_id is valid', async () => {
         const mockData = [
@@ -146,6 +163,23 @@ describe('Client Model', () => {
             .expect(500);
 
         expect(response.body).toEqual(error);
+    });
+
+    it('catch block', () => {
+        const error = new Error('Test Error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        clientDb.getCP(poolMock, 1, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'client'
+        );
     });
 
     //create
@@ -252,6 +286,23 @@ describe('Client Model', () => {
         );
     });
 
+    it('catch block', () => {
+        const error = new Error('Test Error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        clientDb.getCU(poolMock, 'johndoe', callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'client'
+        );
+    });
+
     //update
     it('should hash the password, execute the query with the correct parameters, and commit the transaction', () => {
         const client_id = 1;
@@ -306,6 +357,32 @@ describe('Client Model', () => {
         clientDb.update(poolMock, client_id, client, callbackMock);
 
         expect(u.globalError).toHaveBeenCalledWith(poolMock, callbackMock, mockError, null, 'client');
+    });
+
+    it('catch block', () => {
+        const error = new Error('Test Error');
+        u.executeQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        const client = {
+            full_name: 'John Doe',
+            username: 'johndoe',
+            password: 'password123',
+            billing_address: '123 Main St',
+            phone_number: '1234567890',
+            email: 'john.doe@example.com'
+        };
+
+        clientDb.update(poolMock, 1, client, callbackMock);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'client'
+        );
     });
 
     //delete
@@ -363,22 +440,20 @@ describe('Client Model', () => {
         expect(response.body.errors[0].msg).toBe('Client ID must be a number');
     });
 
-    it('should handle global errors', async () => {
-        const client_id = 1;
-        const error = {
-            status: 500,
-            message: 'Unknown error'
-        };
-
-        u.executeQuery.mockImplementation((pool, query, params, successMessage, callback) => {
-            callback(error);
+    it('catch block', () => {
+        const error = new Error('Test Error');
+        u.executeQuery.mockImplementationOnce(() => {
+            throw error;
         });
 
-        const response = await request(app)
-            .delete(`/api/client/profile/${client_id}`)
-            .send();
+        clientDb.delete(poolMock, 1, callbackMock);
 
-        expect(response.status).toBe(500);
-        expect(response.body).toEqual(error);
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callbackMock,
+            error,
+            null,
+            'client'
+        );
     });
 });

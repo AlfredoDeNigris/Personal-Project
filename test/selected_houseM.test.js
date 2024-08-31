@@ -1,10 +1,8 @@
 const request = require('supertest');
 const app = require('../index');
-const selected_houseDb = require('../model/selected_houseM.js');
 const u = require('../utilities.js');
 
 let poolMock;
-let callbackMock;
 
 jest.mock('../controller/securityC.js', () => ({
     verify: (req, res, next) => next(),
@@ -31,7 +29,7 @@ beforeEach(() => {
         rollback: jest.fn((cb) => cb(null))
     };
 
-    callbackMock = jest.fn();
+    //callbackMock = jest.fn();
 
     app.use((req, res, next) => {
         req.pool = poolMock;
@@ -97,6 +95,20 @@ describe('Selected House Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
+    it('catch block', async () => {
+        const error = new Error('Mocked Error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        const callback = jest.fn();
+
+        const selectedHouseDb = require('../model/selected_houseM');
+        selectedHouseDb.getSH(poolMock, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(poolMock, callback, error, null, 'selected house');
+    });
+
     //getSHC
     it('should return 200 and a specific selected_house by client_id', async () => {
         const mockData = [
@@ -159,6 +171,21 @@ describe('Selected House Model', () => {
             .expect(500);
 
         expect(response.body).toEqual(error);
+    });
+
+    it('catch block', async () => {
+        const error = new Error('Mocked Error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        const callback = jest.fn();
+        const client_id = 1;
+
+        const selectedHouseDb = require('../model/selected_houseM');
+        selectedHouseDb.getSHC(poolMock, client_id, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(poolMock, callback, error, null, 'selected house');
     });
 
     //delete
@@ -249,5 +276,21 @@ describe('Selected House Model', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual(error);
+    });
+
+    it('catch block', async () => {
+        const error = new Error('Mocked Error');
+        u.executeQuery.mockImplementationOnce(() => {
+            throw error;
+        });
+
+        const callback = jest.fn();
+        const client_id = 1;
+        const house_model_id = 1;
+
+        const selectedHouseDb = require('../model/selected_houseM');
+        selectedHouseDb.delete(poolMock, client_id, house_model_id, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(poolMock, callback, error, null, 'selected house');
     });
 });

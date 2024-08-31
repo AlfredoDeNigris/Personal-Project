@@ -75,6 +75,27 @@ describe('House Catalogue Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
+    it('catch block', async () => {
+        const mockError = new Error('Test error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw mockError;
+        });
+
+        const poolMock = {};
+        const callback = jest.fn();
+
+        const house_catalogueDb = require('../model/house_catalogueM.js');
+        house_catalogueDb.getHC(poolMock, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callback,
+            mockError,
+            null,
+            'house model'
+        );
+    });
+
     //getHCB
     it("should return 200 and a list with all housing options information within the inputted budget", async () => {
         const budget = "200000.00";
@@ -136,6 +157,28 @@ describe('House Catalogue Model', () => {
         expect(response.body).toEqual(error);
     });
 
+    it('catch block', async () => {
+        const mockError = new Error('Test error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw mockError;
+        });
+
+        const poolMock = {};
+        const budget = 200000;
+        const callback = jest.fn();
+
+        const house_catalogueDb = require('../model/house_catalogueM.js');
+        house_catalogueDb.getHCB(poolMock, budget, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callback,
+            mockError,
+            null,
+            'house model'
+        );
+    });
+
     //getHCC
     it("should return 200 and a specific house_model", async () => {
         const house_model_id = "1";
@@ -195,5 +238,27 @@ describe('House Catalogue Model', () => {
             .expect(500);
 
         expect(response.body).toEqual(error);
+    });
+
+    it('catch block', async () => {
+        const mockError = new Error('Test error');
+        u.readQuery.mockImplementationOnce(() => {
+            throw mockError;
+        });
+
+        const poolMock = {};
+        const house_model_id = 1;
+        const callback = jest.fn();
+
+        const house_catalogueDb = require('../model/house_catalogueM.js');
+        house_catalogueDb.getHCC(poolMock, house_model_id, callback);
+
+        expect(u.globalError).toHaveBeenCalledWith(
+            poolMock,
+            callback,
+            mockError,
+            null,
+            'house model'
+        );
     });
 });
