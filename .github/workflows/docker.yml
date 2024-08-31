@@ -27,6 +27,6 @@ jobs:
         with:
           context: .
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/Personal-Project:latest
-            ${{ secrets.DOCKER_USERNAME }}/Personal-Project:${{ github.sha }}
-            ${{ secrets.DOCKER_USERNAME }}/Personal-Project:${{ github.ref_name }}
+            ${{ secrets.DOCKER_USERNAME }}/personal_project:latest
+            ${{ secrets.DOCKER_USERNAME }}/personal_project:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/personal_project:${{ github.ref_name }}
