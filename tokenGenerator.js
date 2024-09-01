@@ -88,24 +88,6 @@ function verifyJWT(token, secret) {
     }
 }
 
-//Test Case
-const header = { alg: 'HS256', typ: 'JWT' };
-const payload = { sub: '1234567890', name: 'John Doe', iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + 60 };
-const secret = 'your-256-bit-secret';
-
-try {
-    const token = createJWT(header, payload, secret);
-    console.log('Token:', token);
-
-    const isValid = verifyJWT(token, secret);
-    console.log('Token is valid. Payload:', isValid);
-} catch (error) {
-    if (error instanceof JWTError) {
-        console.error(`[JWTError] ${error.message}`);
-    } else {
-        console.error(`[Error] ${error.message}`);
-    }
-}
 
 module.exports = {
     createJWT,

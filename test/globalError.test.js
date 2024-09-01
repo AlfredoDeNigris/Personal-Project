@@ -52,6 +52,17 @@ describe('globalError', () => {
         });
     });
 
+    it('should handle bad field error', () => {
+        const err = { code: "ER_BAD_FIELD_ERROR" };
+        globalError({}, callbackMock, err, null, 'testEntity');
+
+        expect(callbackMock).toHaveBeenCalledWith({
+            status: 400,
+            message: 'The entered data type is not correct',
+            detail: err
+        });
+    });
+
     it('should handle unknown errors', () => {
         const err = { code: "UNKNOWN_ERROR" };
         globalError({}, callbackMock, err, null, 'testEntity');
@@ -71,43 +82,14 @@ describe('globalError', () => {
             message: 'No registered testEntity found with the entered search criteria'
         });
     });
-});
 
-/*
-describe('readQuery', () => {
-    let mockPool, callbackMock;
+    it('should handle unknown behavior', () => {
+        globalError({}, callbackMock, null, null, 'testEntity');
 
-    beforeEach(() => {
-        mockPool = {
-            getConnection: jest.fn()
-        };
-        callbackMock = jest.fn();
-    });
-
-    it('should call globalError on connection error', () => {
-        mockPool.getConnection.mockImplementationOnce((query, params, cb) => cb(new Error('Connection error')));
-
-        readQuery(mockPool, 'query', [], callbackMock, 'testEntity');
-
-        expect(globalError).toHaveBeenCalledWith(mockPool, callbackMock, new Error('Connection error'), undefined, 'testEntity');
-    });
-
-    it('should call globalError if no result is found', () => {
-        mockPool.getConnection.mockImplementationOnce((query, params, cb) => cb(null, []));
-
-        readQuery(mockPool, 'query', [], callbackMock, 'testEntity');
-
-        expect(globalError).toHaveBeenCalledWith(mockPool, callbackMock, undefined, [], 'testEntity');
-    });
-
-    it('should return the result on successful query', () => {
-        const mockResult = [{ id: 1 }];
-        mockPool.getConnection.mockImplementationOnce((query, params, cb) => cb(null, mockResult));
-
-        readQuery(mockPool, 'query', [], callbackMock, 'testEntity');
-
-        expect(callbackMock).toHaveBeenCalledWith(undefined, {
-            result: mockResult
+        expect(callbackMock).toHaveBeenCalledWith({
+            status: 500,
+            message: 'Unknown behavior',
+            detail: null
         });
     });
-});*/
+});
