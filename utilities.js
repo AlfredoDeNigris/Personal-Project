@@ -1,5 +1,4 @@
 function globalError(pool, callback, err, result, entity) {
-    console.log("Error:", err); //This line is here to help identify unknown errors, will be deleted after app is done
     if (!pool) {
         callback({
             status: 500,
