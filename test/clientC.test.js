@@ -1,10 +1,20 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
+
 
 //Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
     verify: (req, res, next) => next() //Bypass actual token verification
 }));
+
+poolMock = {
+    query: jest.fn(),
+    getConnection: jest.fn((cb) => cb(null, poolMock)),
+    release: jest.fn(),
+    beginTransaction: jest.fn((cb) => cb(null)),
+    commit: jest.fn((cb) => cb(null)),
+    rollback: jest.fn((cb) => cb(null))
+};
 
 //Mock the database functions
 const clientDb = require('../model/clientM.js');
@@ -17,20 +27,25 @@ jest.mock('../model/clientM.js', () => ({
 }));
 
 describe('Client API Endpoints', () => {
+    let app;
+
+    beforeAll(() => {
+        app = createApp(poolMock); //Initialize the app with the mocked pool
+    });
+
     //GET /
     it('should return 200 and a list of clients', async () => {
         const mockData = [
             {
                 full_name: 'John Doe',
                 username: 'johndoe',
-                password: 'password123',
                 billing_address: '123 Street',
                 phone_number: '1234567890',
                 email: 'johndoe@example.com'
             },
         ];
 
-        clientDb.getC.mockImplementation((pool, callback) => {
+        clientDb.getC.mockImplementation((poolMock, callback) => {
             callback(null, mockData);
         });
 
@@ -42,7 +57,7 @@ describe('Client API Endpoints', () => {
     });
 
     it('should return 500 if there is an error', async () => {
-        clientDb.getC.mockImplementation((pool, callback) => {
+        clientDb.getC.mockImplementation((poolMock, callback) => {
             const error = { status: 500, message: 'Database error' };
             callback(error);
         });
@@ -60,13 +75,12 @@ describe('Client API Endpoints', () => {
             client_id: 1,
             full_name: 'John Doe',
             username: 'johndoe',
-            password: 'password123',
             billing_address: '123 Street',
             phone_number: '1234567890',
             email: 'johndoe@example.com',
         };
 
-        clientDb.getCP.mockImplementation((pool, client_id, callback) => {
+        clientDb.getCP.mockImplementation((poolMock, client_id, callback) => {
             callback(null, mockData);
         });
 
@@ -90,7 +104,7 @@ describe('Client API Endpoints', () => {
     });
 
     it('should return 500 if there is a database error', async () => {
-        clientDb.getCP.mockImplementation((pool, client_id, callback) => {
+        clientDb.getCP.mockImplementation((poolMock, client_id, callback) => {
             const error = { status: 500, message: 'Database error' };
             callback(error);
         });
@@ -107,7 +121,7 @@ describe('Client API Endpoints', () => {
         const mockData = {
             full_name: 'John Doe',
             username: 'johndoe',
-            password: 'password123',
+            password: "2",
             billing_address: '123 Street',
             phone_number: '1234567890',
             email: 'johndoe@example.com'
@@ -115,7 +129,7 @@ describe('Client API Endpoints', () => {
 
         const successMessage = 'Your registration has been successful.';
 
-        clientDb.create.mockImplementation((pool, client, callback) => {
+        clientDb.create.mockImplementation((poolMock, client, callback) => {
             callback(null, { message: successMessage });
         });
 
@@ -131,7 +145,6 @@ describe('Client API Endpoints', () => {
         const mockData = {
             full_name: 'John123',
             username: '',
-            password: '',
             billing_address: '',
             phone_number: 'ABC',
             email: 'invalidemail'
@@ -145,7 +158,6 @@ describe('Client API Endpoints', () => {
         expect(response.body.errors).toEqual(expect.arrayContaining([
             expect.objectContaining({ msg: 'Full name contains invalid characters.' }),
             expect.objectContaining({ msg: 'Username is required' }),
-            expect.objectContaining({ msg: 'Password is required' }),
             expect.objectContaining({ msg: 'Billing address is required' }),
             expect.objectContaining({ msg: 'Phone number must be numeric' }),
             expect.objectContaining({ msg: 'Invalid email address' })
@@ -156,13 +168,13 @@ describe('Client API Endpoints', () => {
         const mockData = {
             full_name: 'John Doe',
             username: 'johndoe',
-            password: 'password123',
+            password: '2',
             billing_address: '123 Street',
             phone_number: '1234567890',
             email: 'johndoe@example.com'
         };
 
-        clientDb.create.mockImplementation((pool, client, callback) => {
+        clientDb.create.mockImplementation((poolMock, client, callback) => {
             callback({ status: 500, message: 'Database error' }, null);
         });
 
@@ -179,7 +191,7 @@ describe('Client API Endpoints', () => {
         const mockData = {
             full_name: 'John Doe',
             username: 'johndoe',
-            password: 'password123',
+            password: '2',
             billing_address: '123 Street',
             phone_number: '1234567890',
             email: 'johndoe@example.com'
@@ -187,7 +199,7 @@ describe('Client API Endpoints', () => {
 
         const successMessage = 'Profile information updated successfully!';
 
-        clientDb.update.mockImplementation((pool, client_id, client, callback) => {
+        clientDb.update.mockImplementation((poolMock, client_id, client, callback) => {
             callback(null, { message: successMessage });
         });
 
@@ -217,7 +229,6 @@ describe('Client API Endpoints', () => {
         expect(response.body.errors).toEqual(expect.arrayContaining([
             expect.objectContaining({ msg: 'Full name contains invalid characters.' }),
             expect.objectContaining({ msg: 'Username is required' }),
-            expect.objectContaining({ msg: 'Password is required' }),
             expect.objectContaining({ msg: 'Billing address is required' }),
             expect.objectContaining({ msg: 'Phone number must be numeric' }),
             expect.objectContaining({ msg: 'Invalid email address' })
@@ -228,13 +239,13 @@ describe('Client API Endpoints', () => {
         const mockData = {
             full_name: 'John Doe',
             username: 'johndoe',
-            password: 'password123',
+            password: '2',
             billing_address: '123 Street',
             phone_number: '1234567890',
             email: 'johndoe@example.com'
         };
 
-        clientDb.update.mockImplementation((pool, client_id, client, callback) => {
+        clientDb.update.mockImplementation((poolMock, client_id, client, callback) => {
             callback({ status: 500, message: 'Database error' }, null);
         });
 
@@ -250,7 +261,7 @@ describe('Client API Endpoints', () => {
     it('should return 200 and success message when client_id is valid', async () => {
         const successMessage = 'Client deleted successfully';
 
-        clientDb.delete.mockImplementation((pool, client_id, callback) => {
+        clientDb.delete.mockImplementation((poolMock, client_id, callback) => {
             callback(null, { message: successMessage });
         });
 
@@ -272,7 +283,7 @@ describe('Client API Endpoints', () => {
     });
 
     it('should return 500 and error message when database operation fails', async () => {
-        clientDb.delete.mockImplementation((pool, client_id, callback) => {
+        clientDb.delete.mockImplementation((poolMock, client_id, callback) => {
             callback({ status: 500, message: 'Database error' }, null);
         });
 

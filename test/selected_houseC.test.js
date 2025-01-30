@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
 
 //Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
@@ -14,8 +14,24 @@ jest.mock('../model/selected_houseM.js', () => ({
     delete: jest.fn()
 }));
 
+poolMock = {
+    query: jest.fn(),
+    getConnection: jest.fn((cb) => cb(null, poolMock)),
+    release: jest.fn(),
+    beginTransaction: jest.fn((cb) => cb(null)),
+    commit: jest.fn((cb) => cb(null)),
+    rollback: jest.fn((cb) => cb(null))
+};
+
 describe('Selected House API Endpoints', () => {
-    //GET /
+    let app;
+
+    beforeAll(async () => {
+        //Create the app instance with a mock pool
+        app = createApp(poolMock);
+    });
+
+    // GET /
     it('should return 200 and the correct data if the request is successful', async () => {
         const mockData = [
             {
@@ -39,7 +55,7 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/selected-house')
+            .get('/api/selected-house');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -53,13 +69,13 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/selected-house')
+            .get('/api/selected-house');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    //GET /:client_id
+    // GET /:client_id
     it('should return 200 and the correct data if the request is successful', async () => {
         const mockData = [
             {
@@ -78,7 +94,7 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/selected-house/1')
+            .get('/api/selected-house/1');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -86,7 +102,7 @@ describe('Selected House API Endpoints', () => {
 
     it('should return 400 if the client_id is not a number', async () => {
         const response = await request(app)
-            .get('/api/selected-house/invalid-id')
+            .get('/api/selected-house/invalid-id');
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -95,8 +111,8 @@ describe('Selected House API Endpoints', () => {
                     msg: 'Client ID must be a number',
                     path: 'client_id',
                     location: 'params',
-                    type: "field",
-                    value: "invalid-id"
+                    type: 'field',
+                    value: 'invalid-id'
                 }
             ]
         });
@@ -110,13 +126,13 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/selected-house/1')
+            .get('/api/selected-house/1');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    //DELETE /:client_id/:house_model_id
+    // DELETE /:client_id/:house_model_id
     it('should return 200 and success message if the house and features are deleted successfully', async () => {
         const mockData = { message: 'Selected house and its features deleted successfully' };
 
@@ -125,7 +141,7 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .delete('/api/selected-house/1/2')
+            .delete('/api/selected-house/1/2');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -133,7 +149,7 @@ describe('Selected House API Endpoints', () => {
 
     it('should return 400 if client_id or house_model_id is not a number', async () => {
         const response = await request(app)
-            .delete('/api/selected-house/abc/2')
+            .delete('/api/selected-house/abc/2');
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual({
@@ -157,10 +173,9 @@ describe('Selected House API Endpoints', () => {
         });
 
         const response = await request(app)
-            .delete('/api/selected-house/1/2')
+            .delete('/api/selected-house/1/2');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
-
 });

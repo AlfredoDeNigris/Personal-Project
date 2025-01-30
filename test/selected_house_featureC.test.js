@@ -1,9 +1,18 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
+
+const poolMock = {
+    query: jest.fn(),
+    getConnection: jest.fn((cb) => cb(null, poolMock)),
+    release: jest.fn(),
+    beginTransaction: jest.fn((cb) => cb(null)),
+    commit: jest.fn((cb) => cb(null)),
+    rollback: jest.fn((cb) => cb(null))
+};
 
 //Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
-    verify: (req, res, next) => next() //Bypass actual token verification
+    verify: (req, res, next) => next() //ByPass actual token verification
 }));
 
 //Mock the database functions
@@ -16,6 +25,12 @@ jest.mock('../model/selected_house_featureM.js', () => ({
 }));
 
 describe('Selected House Feature API Endpoints', () => {
+    let app;
+
+    beforeAll(() => {
+        app = createApp(poolMock);
+    });
+
     //GET /
     it('should return 200 and the correct data if the request is successful', async () => {
         const mockData = [
@@ -32,18 +47,18 @@ describe('Selected House Feature API Endpoints', () => {
                 square_meters: 120,
                 worker_cost: 15000.00,
                 comercial_cost: 200000.00,
-                feature_name: 'Swimming Pool',
+                feature_name: 'Swimming poolMock',
                 unit_cost: 10000.00,
-                information: 'A private pool with all necessary facilities.'
+                information: 'A private poolMock with all necessary facilities.'
             }
         ];
 
-        selected_house_featureDb.getSHF.mockImplementation((pool, callback) => {
+        selected_house_featureDb.getSHF.mockImplementation((poolMock, callback) => {
             callback(null, mockData);
         });
 
         const response = await request(app)
-            .get('/api/selected-house-feature')
+            .get('/api/selected-house-feature');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -52,12 +67,12 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 500 if there is a database error', async () => {
         const mockError = { status: 500, message: 'Database error' };
 
-        selected_house_featureDb.getSHF.mockImplementation((pool, callback) => {
+        selected_house_featureDb.getSHF.mockImplementation((poolMock, callback) => {
             callback(mockError, null);
         });
 
         const response = await request(app)
-            .get('/api/selected-house-feature')
+            .get('/api/selected-house-feature');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -67,18 +82,18 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 200 and the correct data if the request is successful', async () => {
         const mockData = [
             {
-                feature_name: 'Pool',
+                feature_name: 'poolMock',
                 unit_cost: 5000,
-                information: 'In-ground pool'
+                information: 'In-ground poolMock'
             }
         ];
 
-        selected_house_featureDb.getSHFC.mockImplementation((pool, client_id, house_model_id, callback) => {
+        selected_house_featureDb.getSHFC.mockImplementation((poolMock, client_id, house_model_id, callback) => {
             callback(null, mockData);
         });
 
         const response = await request(app)
-            .get('/api/selected-house-feature/123/456')
+            .get('/api/selected-house-feature/123/456');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -86,7 +101,7 @@ describe('Selected House Feature API Endpoints', () => {
 
     it('should return 400 if client_id or house_model_id is not a number', async () => {
         const response = await request(app)
-            .get('/api/selected-house-feature/invalid-client-id/456')
+            .get('/api/selected-house-feature/invalid-client-id/456');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -105,12 +120,12 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 500 if there is a database error', async () => {
         const mockError = { status: 500, message: 'Database error' };
 
-        selected_house_featureDb.getSHFC.mockImplementation((pool, client_id, house_model_id, callback) => {
+        selected_house_featureDb.getSHFC.mockImplementation((poolMock, client_id, house_model_id, callback) => {
             callback(mockError, null);
         });
 
         const response = await request(app)
-            .get('/api/selected-house-feature/123/456')
+            .get('/api/selected-house-feature/123/456');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -118,9 +133,9 @@ describe('Selected House Feature API Endpoints', () => {
 
     //POST /
     it('should return 200 and the created house feature if the request is valid', async () => {
-        const mockData = { message: 'New house created successfully' };
+        const mockData = { message: 'New house feature created successfully' };
 
-        selected_house_featureDb.create.mockImplementation((pool, selected_house_feature, callback) => {
+        selected_house_featureDb.create.mockImplementation((poolMock, selected_house_feature, callback) => {
             callback(null, mockData);
         });
 
@@ -132,7 +147,7 @@ describe('Selected House Feature API Endpoints', () => {
                 final_price: 300000,
                 feature_id: 3,
                 quantity: 1
-            })
+            });
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -145,7 +160,7 @@ describe('Selected House Feature API Endpoints', () => {
                 client_id: 'invalid-client-id',
                 house_model_id: 'invalid-house-model-id',
                 final_price: 'invalid-final-price'
-            })
+            });
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -173,7 +188,7 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 500 if there is a database error', async () => {
         const mockError = { status: 500, message: 'Database error' };
 
-        selected_house_featureDb.create.mockImplementation((pool, selected_house_feature, callback) => {
+        selected_house_featureDb.create.mockImplementation((poolMock, selected_house_feature, callback) => {
             callback(mockError, null);
         });
 
@@ -183,7 +198,7 @@ describe('Selected House Feature API Endpoints', () => {
                 client_id: 1,
                 house_model_id: 2,
                 final_price: 300000
-            })
+            });
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -193,12 +208,12 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 200 and a success message if the feature is deleted successfully', async () => {
         const mockData = { message: 'Feature deleted successfully' };
 
-        selected_house_featureDb.delete.mockImplementation((pool, client_id, house_model_id, feature_id, callback) => {
+        selected_house_featureDb.delete.mockImplementation((poolMock, client_id, house_model_id, feature_id, callback) => {
             callback(null, mockData);
         });
 
         const response = await request(app)
-            .delete('/api/selected-house-feature/1/2/3')
+            .delete('/api/selected-house-feature/1/2/3');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -206,7 +221,7 @@ describe('Selected House Feature API Endpoints', () => {
 
     it('should return 400 if validation fails', async () => {
         const response = await request(app)
-            .delete('/api/selected-house-feature/invalid-client-id/invalid-house-model-id/invalid-feature-id')
+            .delete('/api/selected-house-feature/invalid-client-id/invalid-house-model-id/invalid-feature-id');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -234,12 +249,12 @@ describe('Selected House Feature API Endpoints', () => {
     it('should return 500 if there is a database error', async () => {
         const mockError = { status: 500, message: 'Database error' };
 
-        selected_house_featureDb.delete.mockImplementation((pool, client_id, house_model_id, feature_id, callback) => {
+        selected_house_featureDb.delete.mockImplementation((poolMock, client_id, house_model_id, feature_id, callback) => {
             callback(mockError, null);
         });
 
         const response = await request(app)
-            .delete('/api/selected-house-feature/1/2/3')
+            .delete('/api/selected-house-feature/1/2/3');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });

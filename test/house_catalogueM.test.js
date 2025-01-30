@@ -1,11 +1,13 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
 const u = require('../utilities.js');
 
 let poolMock;
+let app;
 
+//Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
-    verify: (req, res, next) => next(),
+    verify: (req, res, next) => next() //Bypass actual token verification
 }));
 
 jest.mock('../utilities.js', () => ({
@@ -13,20 +15,17 @@ jest.mock('../utilities.js', () => ({
     readQuery: jest.fn(),
 }));
 
-beforeEach(() => {
+beforeEach(async () => {
     poolMock = {
         query: jest.fn(),
         getConnection: jest.fn((cb) => cb(null, poolMock)),
         release: jest.fn(),
         beginTransaction: jest.fn((cb) => cb(null)),
         commit: jest.fn((cb) => cb(null)),
-        rollback: jest.fn((cb) => cb(null))
+        rollback: jest.fn((cb) => cb(null)),
     };
 
-    app.use((req, res, next) => {
-        req.pool = poolMock;
-        next();
-    });
+    app = createApp(poolMock);
 });
 
 describe('House Catalogue Model', () => {
@@ -54,7 +53,7 @@ describe('House Catalogue Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             'SELECT review, construction_time, bathroom, bedroom, comercial_cost FROM house_model',
             null,
             expect.any(Function),
@@ -81,7 +80,6 @@ describe('House Catalogue Model', () => {
             throw mockError;
         });
 
-        const poolMock = {};
         const callback = jest.fn();
 
         const house_catalogueDb = require('../model/house_catalogueM.js');
@@ -97,7 +95,7 @@ describe('House Catalogue Model', () => {
     });
 
     //getHCB
-    it("should return 200 and a list with all housing options information within the inputted budget", async () => {
+    it('should return 200 and a list with all housing options information within the inputted budget', async () => {
         const budget = "200000.00";
         const mockData = [
             {
@@ -121,7 +119,7 @@ describe('House Catalogue Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             'SELECT review, construction_time, bathroom, bedroom, comercial_cost FROM house_model WHERE comercial_cost <= ?',
             [budget],
             expect.any(Function),
@@ -163,7 +161,6 @@ describe('House Catalogue Model', () => {
             throw mockError;
         });
 
-        const poolMock = {};
         const budget = 200000;
         const callback = jest.fn();
 
@@ -180,7 +177,7 @@ describe('House Catalogue Model', () => {
     });
 
     //getHCC
-    it("should return 200 and a specific house_model", async () => {
+    it('should return 200 and a specific house_model', async () => {
         const house_model_id = "1";
         const mockData = [
             {
@@ -199,12 +196,12 @@ describe('House Catalogue Model', () => {
         });
 
         const response = await request(app)
-            .get(`/api/house-catalogue//house/${house_model_id}`);
+            .get(`/api/house-catalogue/house/${house_model_id}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             'SELECT review, construction_time, bathroom, bedroom, comercial_cost FROM house_model WHERE house_model_id = ?',
             [house_model_id],
             expect.any(Function),
@@ -246,7 +243,6 @@ describe('House Catalogue Model', () => {
             throw mockError;
         });
 
-        const poolMock = {};
         const house_model_id = 1;
         const callback = jest.fn();
 

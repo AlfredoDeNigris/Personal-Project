@@ -1,11 +1,12 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
 const u = require('../utilities.js');
 
-let poolMock, pool, callback;
+let app;
+let poolMock;
 
 jest.mock('../controller/securityC.js', () => ({
-    verify: (req, res, next) => next(),
+    verify: (req, res, next) => next(), //Bypass actual token verification
 }));
 
 jest.mock('../utilities.js', () => ({
@@ -20,25 +21,20 @@ beforeEach(() => {
         release: jest.fn(),
         beginTransaction: jest.fn((cb) => cb(null)),
         commit: jest.fn((cb) => cb(null)),
-        rollback: jest.fn((cb) => cb(null))
+        rollback: jest.fn((cb) => cb(null)),
     };
 
-    pool = {};
-    callback = jest.fn();
-
-    app.use((req, res, next) => {
-        req.pool = poolMock;
-        next();
-    });
+    //Mock the database functions to return mock pool
+    app = createApp(poolMock);
 });
 
 describe('Feature Model', () => {
-    //getF
+    //GET /
     it('should return 200 and a list of features', async () => {
         const mockData = [{
             feature_name: 'Swimming Pool',
             unit_cost: '10000.00',
-            information: 'A private pool with all necessary facilities.'
+            information: 'A private pool with all necessary facilities.',
         }];
 
         u.readQuery.mockImplementationOnce((pool, query, params, callback) => {
@@ -50,7 +46,7 @@ describe('Feature Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             'SELECT feature_name, unit_cost, information FROM feature',
             null,
             expect.any(Function),
@@ -68,13 +64,13 @@ describe('Feature Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    //getFD
-    it("should return 200 and all features information with a difference between the inputted budget and the selected house_model's commercial cost", async () => {
-        const difference = "10000.00";
+    //GET /:difference
+    it('should return 200 and all features information with a difference between the inputted budget and the selected house_model\'s commercial cost', async () => {
+        const difference = '10000.00';
         const mockData = [{
             feature_name: 'Swimming Pool',
             unit_cost: '10000.00',
-            information: 'A private pool with all necessary facilities.'
+            information: 'A private pool with all necessary facilities.',
         }];
 
         u.readQuery.mockImplementationOnce((pool, query, params, callback) => {
@@ -86,7 +82,7 @@ describe('Feature Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             'SELECT feature_name, unit_cost, information FROM feature WHERE unit_cost <= ?',
             [difference],
             expect.any(Function),
@@ -100,8 +96,8 @@ describe('Feature Model', () => {
         expect(response.body.errors).toEqual(expect.arrayContaining([
             expect.objectContaining({
                 msg: 'Difference must be a number',
-                path: 'difference'
-            })
+                path: 'difference',
+            }),
         ]));
     });
 
@@ -122,11 +118,11 @@ describe('Feature Model', () => {
 
         const featureDb = require('../model/featureM');
 
-        featureDb.getF(pool, callback);
-        expect(u.globalError).toHaveBeenCalledWith(pool, callback, error, null, 'feature');
+        featureDb.getF(poolMock, jest.fn());
+        expect(u.globalError).toHaveBeenCalledWith(poolMock, expect.any(Function), error, null, 'feature');
 
         const difference = 10000;
-        featureDb.getFD(pool, difference, callback);
-        expect(u.globalError).toHaveBeenCalledWith(pool, callback, error, null, 'feature');
+        featureDb.getFD(poolMock, difference, jest.fn());
+        expect(u.globalError).toHaveBeenCalledWith(poolMock, expect.any(Function), error, null, 'feature');
     });
 });

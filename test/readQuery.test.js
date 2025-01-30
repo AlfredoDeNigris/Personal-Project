@@ -1,10 +1,10 @@
 const { readQuery } = require('../utilities');
-
+const { globalError } = require('../utilities');
 
 describe('readQuery', () => {
     let mockPool;
     let mockCallback;
-    let query = "";
+    let query = "SELECT * FROM test_table";
 
     beforeEach(() => {
         mockPool = {
@@ -15,19 +15,30 @@ describe('readQuery', () => {
 
     it('should call callback with result when no error and result has data', () => {
         const mockResult = [{ id: 1, name: 'Test' }];
-        mockPool.getConnection.mockImplementation((query, params, callback) => {
-            callback(null, mockResult);
+        const mockConnection = {
+            query: jest.fn((q, params, callback) => callback(null, mockResult)),
+            release: jest.fn()
+        };
+
+        mockPool.getConnection.mockImplementation((callback) => {
+            callback(null, mockConnection);
         });
 
         readQuery(mockPool, query, [], mockCallback, 'entity');
 
-        expect(mockCallback).toHaveBeenCalledWith(undefined, { result: mockResult });
+        expect(mockConnection.query).toHaveBeenCalledWith(query, [], expect.any(Function));
+        expect(mockCallback).toHaveBeenCalledWith(null, { result: mockResult });
     });
 
-    it('should return 500 status and error message when there is a database error', () => {
+    it('should get 500 status and error message when there is a database error', () => {
         const mockError = new Error('Database error');
-        mockPool.getConnection.mockImplementation((query, params, callback) => {
-            callback(mockError, []);
+        const mockConnection = {
+            query: jest.fn((q, params, callback) => callback(mockError, [])),
+            release: jest.fn()
+        };
+
+        mockPool.getConnection.mockImplementation((callback) => {
+            callback(null, mockConnection);
         });
 
         readQuery(mockPool, query, [], (err, result) => {
@@ -40,9 +51,14 @@ describe('readQuery', () => {
         }, 'entity');
     });
 
-    it('should return 404 status when result is empty', () => {
-        mockPool.getConnection.mockImplementation((query, params, callback) => {
-            callback(null, []);
+    it('should get 404 status when result is empty', () => {
+        const mockConnection = {
+            query: jest.fn((q, params, callback) => callback(null, [])),
+            release: jest.fn()
+        };
+
+        mockPool.getConnection.mockImplementation((callback) => {
+            callback(null, mockConnection);
         });
 
         readQuery(mockPool, query, [], (err, result) => {
@@ -51,18 +67,6 @@ describe('readQuery', () => {
                 message: 'No registered entity found with the entered search criteria'
             });
             expect(result).toBeUndefined();
-        }, 'entity');
-    });
-
-    it('should call callback with result when no error and result has data', () => {
-        const mockResult = [{ id: 1, name: 'Test' }];
-        mockPool.getConnection.mockImplementation((query, params, callback) => {
-            callback(null, mockResult);
-        });
-
-        readQuery(mockPool, query, [], (err, result) => {
-            expect(err).toBeUndefined();
-            expect(result).toEqual({ result: mockResult });
         }, 'entity');
     });
 });

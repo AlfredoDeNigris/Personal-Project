@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
 
 //Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
@@ -14,8 +14,24 @@ jest.mock('../model/house_catalogueM.js', () => ({
     getHCC: jest.fn()
 }));
 
-describe('House Catalouge API Endpoints', () => {
-    //GET /
+let app;
+
+beforeAll(async () => {
+    //Setup app with a mock pool
+    const poolMock = {
+        query: jest.fn(),
+        getConnection: jest.fn((cb) => cb(null, poolMock)),
+        release: jest.fn(),
+        beginTransaction: jest.fn((cb) => cb(null)),
+        commit: jest.fn((cb) => cb(null)),
+        rollback: jest.fn((cb) => cb(null))
+    };
+
+    app = createApp(poolMock);
+});
+
+describe('House Catalogue API Endpoints', () => {
+    //GET /api/house-catalogue
     it('should return 200 and a list of house models', async () => {
         const mockData = [
             { review: 'Excellent', construction_time: 120, bathroom: 2, bedroom: 3, comercial_cost: 250000 },
@@ -26,8 +42,7 @@ describe('House Catalouge API Endpoints', () => {
             callback(null, mockData);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue')
+        const response = await request(app).get('/api/house-catalogue');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -39,14 +54,13 @@ describe('House Catalouge API Endpoints', () => {
             callback(error, null);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue')
+        const response = await request(app).get('/api/house-catalogue');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    //GET /:budget
+    //GET /api/house-catalogue/:budget
     it('should return 200 and a list of house models within the budget', async () => {
         const mockData = [
             { review: 'Excellent', construction_time: 120, bathroom: 2, bedroom: 3, comercial_cost: 200000 },
@@ -57,16 +71,14 @@ describe('House Catalouge API Endpoints', () => {
             callback(null, mockData);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue/5000000')
+        const response = await request(app).get('/api/house-catalogue/5000000');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
     });
 
     it('should return 400 if the budget parameter is not a number', async () => {
-        const response = await request(app)
-            .get('/api/house-catalogue/invalid-budget')
+        const response = await request(app).get('/api/house-catalogue/invalid-budget');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -74,9 +86,9 @@ describe('House Catalouge API Endpoints', () => {
                 expect.objectContaining({
                     location: 'params',
                     msg: 'Budget must be a number',
-                    path: "budget",
-                    type: "field",
-                    value: "invalid-budget"
+                    path: 'budget',
+                    type: 'field',
+                    value: 'invalid-budget'
                 })
             ])
         );
@@ -88,14 +100,13 @@ describe('House Catalouge API Endpoints', () => {
             callback(error, null);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue/500000')
+        const response = await request(app).get('/api/house-catalogue/500000');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    //GET /house/:house_model_id
+    //GET /api/house-catalogue/house/:house_model_id
     it('should return 200 and house data when house_model_id is valid', async () => {
         const mockData = {
             review: 'Excellent',
@@ -109,16 +120,14 @@ describe('House Catalouge API Endpoints', () => {
             callback(null, mockData);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue/house/1')
+        const response = await request(app).get('/api/house-catalogue/house/1');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
     });
 
     it('should return 400 if house_model_id is not a number', async () => {
-        const response = await request(app)
-            .get('/api/house-catalogue/house/invalid-id')
+        const response = await request(app).get('/api/house-catalogue/house/invalid-id');
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -127,8 +136,8 @@ describe('House Catalouge API Endpoints', () => {
                     location: 'params',
                     msg: 'House model ID must be a number',
                     path: 'house_model_id',
-                    type: "field",
-                    value: "invalid-id"
+                    type: 'field',
+                    value: 'invalid-id'
                 })
             ])
         );
@@ -140,8 +149,7 @@ describe('House Catalouge API Endpoints', () => {
             callback(error, null);
         });
 
-        const response = await request(app)
-            .get('/api/house-catalogue/house/10')
+        const response = await request(app).get('/api/house-catalogue/house/10');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });

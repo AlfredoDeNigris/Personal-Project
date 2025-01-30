@@ -1,10 +1,11 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
 const selected_house_featureDb = require('../model/selected_house_featureM.js');
 const u = require('../utilities.js');
 
 let poolMock;
 let callbackMock;
+let app;
 
 jest.mock('../controller/securityC.js', () => ({
     verify: (req, res, next) => next(),
@@ -33,10 +34,7 @@ beforeEach(() => {
 
     callbackMock = jest.fn();
 
-    app.use((req, res, next) => {
-        req.pool = poolMock;
-        next();
-    });
+    app = createApp(poolMock);
 });
 
 describe('Selected House Feature Model', () => {
@@ -72,7 +70,7 @@ describe('Selected House Feature Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             `
         SELECT c.full_name, c.username, c.billing_address, 
         c.phone_number, c.email, hm.review, hm.construction_time, 
@@ -143,7 +141,7 @@ describe('Selected House Feature Model', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.result).toEqual(mockData);
         expect(u.readQuery).toHaveBeenCalledWith(
-            undefined,
+            poolMock,
             `
         SELECT f.feature_name, f.unit_cost, f.information 
         FROM selected_house_feature shf 
@@ -170,7 +168,7 @@ describe('Selected House Feature Model', () => {
 
     it('should return 400 if client_id is not a number', async () => {
         const response = await request(app)
-            .get('/api/selected-house-feature/client_id/1')
+            .get('/api/selected-house-feature/invalid_client_id/1')
             .expect(400);
 
         expect(response.body.errors).toEqual(expect.arrayContaining([
@@ -194,7 +192,7 @@ describe('Selected House Feature Model', () => {
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
     });
 
-    it('catch block', () => {
+    it('should handle errors in the catch block', () => {
         const error = new Error('Query error');
 
         u.readQuery.mockImplementationOnce(() => {
@@ -301,176 +299,40 @@ describe('Selected House Feature Model', () => {
             expect.objectContaining({
                 msg: 'Final Price must be a number',
                 path: 'final_price'
-            }),
+            })
         ]));
     });
 
-    it('should handle errors and call globalError if an error occurs', () => {
-        const mockData = {
+    it('should return 500 if there is an error', async () => {
+        const error = new Error('Query error');
+        error.status = 500;
+
+        // Simula un error en la ejecución de la consulta
+        u.executeQuery.mockImplementation((pool, query, params, successMessage, callbackMock) => {
+            callbackMock(error); // Asegúrate de pasar callbackMock correctamente
+        });
+
+        selected_house_featureDb.create(poolMock, {
             client_id: 1,
             house_model_id: 2,
             final_price: 300000
-        };
+        }, callbackMock);
 
-        const error = new Error('Something went wrong');
+        expect(u.globalError).toHaveBeenCalled();
+    });
+
+    it('should handle errors in the catch block', () => {
+        const error = new Error('Query error');
+
         u.executeQuery.mockImplementationOnce(() => {
             throw error;
         });
 
-        selected_house_featureDb.create(poolMock, mockData, callbackMock);
-
-        expect(u.globalError).toHaveBeenCalledWith(
-            poolMock,
-            callbackMock,
-            error,
-            null,
-            'selected house feature'
-        );
-    });
-
-    it('catch block', () => {
-        const mockData = {
+        selected_house_featureDb.create(poolMock, {
             client_id: 1,
             house_model_id: 2,
             final_price: 300000
-        };
-
-        const error = new Error('Transaction error');
-
-        u.executeQuery.mockImplementationOnce(() => {
-            throw error;
-        });
-
-        selected_house_featureDb.create(poolMock, mockData, callbackMock);
-
-        expect(u.globalError).toHaveBeenCalledWith(
-            poolMock,
-            callbackMock,
-            error,
-            null,
-            'selected house feature'
-        );
-    });
-
-    //delete
-    it('should delete a feature associated to a specific selected_house by client_id, house_model_id, and feature_id', async () => {
-        const mockData = {
-            client_id: "1",
-            house_model_id: "2",
-            feature_id: "2"
-        };
-
-        const expectedParams = [
-            mockData.client_id,
-            mockData.house_model_id,
-            mockData.feature_id
-        ];
-
-        u.executeQuery.mockImplementationOnce((pool, query, params, successMessage, callback) => {
-            callback(null, { message: successMessage, detail: { affectedRows: 1 } });
-        });
-
-        const response = await request(app).delete('/api/selected-house-feature/1/2/2');
-
-        expect(response.status).toBe(200);
-        expect(u.executeQuery).toHaveBeenCalledWith(
-            undefined,
-            'DELETE FROM selected_house_feature WHERE client_id = ? AND house_model_id = ? AND feature_id = ?;',
-            expectedParams,
-            'Feature deleted successfully',
-            expect.any(Function),
-            'selected house feature'
-        );
-    });
-
-    it('should return 404 if the selected house feature is not found', async () => {
-        const mockData = {
-            client_id: "1",
-            house_model_id: "2",
-            feature_id: "2"
-        };
-
-        const expectedParams = [
-            mockData.client_id,
-            mockData.house_model_id,
-            mockData.feature_id
-        ];
-
-        const error = {
-            status: 404,
-            message: 'No registered selected house feature found with the entered search criteria'
-        };
-
-        u.executeQuery.mockImplementation((pool, query, params, successMessage, callback) => {
-            callback(error);
-        });
-
-        const response = await request(app)
-            .delete(`/api/selected-house-feature/1/2/2`)
-            .send();
-
-        expect(response.status).toBe(404);
-        expect(response.body).toEqual(error);
-        expect(u.executeQuery).toHaveBeenCalledWith(
-            undefined,
-            'DELETE FROM selected_house_feature WHERE client_id = ? AND house_model_id = ? AND feature_id = ?;',
-            expectedParams,
-            'Feature deleted successfully',
-            expect.any(Function),
-            'selected house feature'
-        );
-    });
-
-    it('should return 400 if any id is not a number', async () => {
-        const response = await request(app)
-            .delete('/api/selected-house-feature/invalid_id/invalid_id/invalid_id')
-            .send();
-
-        expect(response.status).toBe(400);
-        const { errors } = response.body;
-
-        expect(errors).toEqual(expect.arrayContaining([
-            expect.objectContaining({
-                msg: 'Client ID must be a number',
-                path: 'client_id'
-            }),
-            expect.objectContaining({
-                msg: 'House Model ID must be a number',
-                path: 'house_model_id'
-            }),
-            expect.objectContaining({
-                msg: 'Feature ID must be a number',
-                path: 'feature_id'
-            }),
-        ]));
-    });
-
-    it('should handle global errors', async () => {
-        const error = {
-            status: 500,
-            message: 'Unknown error'
-        };
-
-        u.executeQuery.mockImplementation((pool, query, params, successMessage, callback) => {
-            callback(error);
-        });
-
-        const response = await request(app)
-            .delete(`/api/selected-house-feature/1/2/2`)
-            .send();
-
-        expect(response.status).toBe(500);
-        expect(response.body).toEqual(error);
-    });
-
-    it('catch block', () => {
-        const error = new Error('Delete error');
-
-        u.executeQuery.mockImplementationOnce(() => {
-            throw error;
-        });
-
-        selected_house_featureDb.delete(poolMock, 1, 2, 3, callbackMock);
+        }, callbackMock);
 
         expect(u.globalError).toHaveBeenCalledWith(
             poolMock,

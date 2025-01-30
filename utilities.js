@@ -87,14 +87,20 @@ function executeQuery(pool, query, params, successMessage, callback, entity) {
 };
 
 function readQuery(pool, query, params, callback, entity) {
-    pool.getConnection(query, params, (err, result) => {
-        if (err || result.length === 0) {
-            globalError(pool, callback, err, result, entity);
-        } else {
-            callback(undefined, {
-                result
-            });
+    pool.getConnection((err, connection) => {
+        if (err) {
+            return globalError(pool, callback, err, null, entity);
         }
+
+        connection.query(query, params, (err, result) => {
+            connection.release();
+
+            if (err || result.length === 0) {
+                globalError(pool, callback, err, result, entity);
+            } else {
+                callback(null, { result });
+            }
+        });
     });
 }
 

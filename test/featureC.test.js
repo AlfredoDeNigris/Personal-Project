@@ -1,5 +1,7 @@
 const request = require('supertest');
-const app = require('../index');
+const { createApp } = require('../index');
+const featureDb = require('../model/featureM.js');
+const security = require('../controller/securityC.js');
 
 //Mock the security middleware
 jest.mock('../controller/securityC.js', () => ({
@@ -7,11 +9,20 @@ jest.mock('../controller/securityC.js', () => ({
 }));
 
 //Mock the database functions
-const featureDb = require('../model/featureM.js');
 jest.mock('../model/featureM.js', () => ({
     getF: jest.fn(),
     getFD: jest.fn()
 }));
+
+//Create an instance of the app with the mock pool
+const mockPool = {
+    getConnection: jest.fn((callback) => callback(null, {
+        query: jest.fn(),
+        release: jest.fn()
+    }))
+};
+
+const app = createApp(mockPool);
 
 describe('Feature API Endpoints', () => {
     //GET /
@@ -26,7 +37,7 @@ describe('Feature API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/features')
+            .get('/api/features');
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -39,7 +50,7 @@ describe('Feature API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get('/api/features')
+            .get('/api/features');
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
@@ -58,7 +69,7 @@ describe('Feature API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get(`/api/features/${mockDifference}`)
+            .get(`/api/features/${mockDifference}`);
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual(mockData);
@@ -66,15 +77,23 @@ describe('Feature API Endpoints', () => {
 
     it('should return 400 if "difference" is not numeric', async () => {
         const response = await request(app)
-            .get(`/api/features/not-a-number`)
+            .get(`/api/features/not-a-number`);
 
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
-            expect.arrayContaining([{ "location": "params", "msg": "Difference must be a number", "path": "difference", "type": "field", "value": "not-a-number" }])
+            expect.arrayContaining([
+                expect.objectContaining({
+                    location: 'params',
+                    msg: 'Difference must be a number',
+                    path: 'difference',
+                    type: 'field',
+                    value: 'not-a-number'
+                })
+            ])
         );
     });
 
-    it('should return 500 if there is an error in fetching features', async () => {
+    it('should return 500 if there is an error in fetching features by difference', async () => {
         const mockDifference = 200;
 
         featureDb.getFD.mockImplementation((pool, difference, callback) => {
@@ -83,7 +102,7 @@ describe('Feature API Endpoints', () => {
         });
 
         const response = await request(app)
-            .get(`/api/features/${mockDifference}`)
+            .get(`/api/features/${mockDifference}`);
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ status: 500, message: 'Database error' });
